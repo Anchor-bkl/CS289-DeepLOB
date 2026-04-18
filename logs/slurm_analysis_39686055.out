@@ -1,0 +1,5 @@
+=== DeepLOB Analysis Job ===
+Job ID: 39686055  Node: r034.ib.bridges2.psc.edu  Started: Fri Apr 17 17:47:13 EDT 2026
+Packages OK
+PyTorch: 1.13.1 | CUDA: False
+Executing notebook (training skipped — loading saved results)...

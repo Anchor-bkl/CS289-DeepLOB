@@ -1,0 +1,159 @@
+Unloading the anaconda2 module (if loaded)...
+Unloading the anaconda3 module (if loaded)...
+Pytorch 1.13.1
+-----------------------------
+
+Description
+-----------
+The modulefile AI/pytorch_23.02-1.13.1-py3 provides a Pytorch 1.13.1
+development environment for Artificial Intelligence(AI)/Machine
+Learning(ML)/Big Data(BD) on top of Python 3.
+
+Module contents
+---------------
+Several popular libraries are included in this environment, such as:
+    bokeh, matplotlib, mkl, numba, numpy, pandas, pillow, scikit-image,
+scikit-learn, torchaudio, torchvision.
+
+To check the full list of available packages in this environment, first
+activate it and then run the command
+    conda list
+
+* beautifulsoup4 4.11.1
+* blas 1.0
+* bokeh 3.0.3
+* cudatoolkit 10.1.243
+* cudnn 8.0.4
+* cython 0.29.32
+* ipython 8.8.0
+* matplotlib 3.6.2
+* mkl 2021.4.0
+* nccl 2.8.3.1
+* notebook 6.5.2
+* numba 0.55.1
+* numpy 1.21.5
+* pandas 1.5.2
+* pillow 9.3.0
+* python 3.10.9
+* pytorch 1.13.1
+* scikit-image 0.19.3
+* scikit-learn 1.0.1
+* scikit-learn-intelex 2021.20221004.171507
+* scipy 1.10.0
+* torch 1.13.1
+* torchaudio 0.13.1
+* torchvision 0.14.1
+
+If you need to further customize this environment (e.g., install additional
+packages, or upgrade a particular package),
+you could first clone this environment as follows:
+    conda create --prefix <path to a dir in which you can write> --clone $ENV
+Then activate the newly spawned environment and proceed with your
+customization.
+
+To get further help with conda usage, you can try one of the following:
+    conda -h
+    conda <command> -h
+
+Module Activation
+-------------------
+The following commands have been executed for activating the module:
+    # module load AI/pytorch_23.02-1.13.1-py3
+    # source /opt/packages/anaconda3/2020.11/etc/profile.d/conda.sh # conda
+init
+    # conda activate /opt/packages/AI/pytorch_23.02-1.13.1-py3
+    # (/opt/packages/AI/pytorch_23.02-1.13.1-py3) USERNAME@BRIDGES-2:~ $ # <<
+Your prompt should have changed to something similar.
+
+For deactivating this module, run either of the following commands:
+    conda deactivate
+    # or
+    module unload AI/pytorch_23.02-1.13.1-py3
+
+[1;32mThe module has been activated and is ready to be used.[0m
+
+[1;31mWARNING:[0m This software should be used on GPU nodes and you are NOT
+using one right now. You will be running on CPUs only, and that will be
+extremely slow as compared to running on GPUs. 
+[NbConvertApp] Converting notebook /ocean/projects/mth250011p/xxiao7/DeepLOB/run_deeplob_pytorch.ipynb to notebook
+Traceback (most recent call last):
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/bin/jupyter-nbconvert", line 11, in <module>
+    sys.exit(main())
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/jupyter_core/application.py", line 276, in launch_instance
+    return super().launch_instance(argv=argv, **kwargs)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/nbconvertapp.py", line 423, in start
+    self.convert_notebooks()
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/nbconvertapp.py", line 560, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/nbconvertapp.py", line 488, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/exporters/exporter.py", line 189, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/exporters/exporter.py", line 206, in from_file
+    return self.from_notebook_node(
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/exporters/notebook.py", line 35, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/exporters/exporter.py", line 146, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/exporters/exporter.py", line 335, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
+    return self.preprocess(nb, resources)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/preprocessors/execute.py", line 89, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbconvert/preprocessors/execute.py", line 110, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+fig, axes = plt.subplots(2, len(K_VALUES), figsize=(18, 9))
+
+for col, k_idx in enumerate(K_VALUES):
+    r = all_results[k_idx]
+    y_true = r['y_true']
+    y_pred = r['y_pred']
+    cm_raw  = confusion_matrix(y_true, y_pred)
+    cm_norm = cm_raw.astype(float) / cm_raw.sum(axis=1, keepdims=True)
+
+    for row, (cm_data, fmt) in enumerate([(cm_raw, 'd'), (cm_norm, '.2f')]):
+        ax = axes[row, col]
+        sns.heatmap(cm_data, annot=True, fmt=fmt, ax=ax,
+                    xticklabels=['D','S','U'], yticklabels=['D','S','U'],
+                    cmap='Blues', cbar=False)
+        ax.set_title(K_LABELS[k_idx], fontsize=8)
+        ax.set_xlabel('Predicted')
+        ax.set_ylabel('True' if col == 0 else '')
+
+axes[0, 0].set_ylabel('Counts\nTrue')
+axes[1, 0].set_ylabel('Row-normalised\nTrue')
+fig.suptitle('Confusion Matrices — All Prediction Horizons', fontsize=13)
+plt.tight_layout()
+fig.savefig(os.path.join(RESULT_DIR, 'all_cm_summary.png'), dpi=120)
+plt.show()
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mKeyError[0m                                  Traceback (most recent call last)
+Cell [0;32mIn[14], line 5[0m
+[1;32m      3[0m [38;5;28;01mfor[39;00m col, k_idx [38;5;129;01min[39;00m [38;5;28menumerate[39m(K_VALUES):
+[1;32m      4[0m     r [38;5;241m=[39m all_results[k_idx]
+[0;32m----> 5[0m     y_true [38;5;241m=[39m [43mr[49m[43m[[49m[38;5;124;43m'[39;49m[38;5;124;43my_true[39;49m[38;5;124;43m'[39;49m[43m][49m
+[1;32m      6[0m     y_pred [38;5;241m=[39m r[[38;5;124m'[39m[38;5;124my_pred[39m[38;5;124m'[39m]
+[1;32m      7[0m     cm_raw  [38;5;241m=[39m confusion_matrix(y_true, y_pred)
+
+[0;31mKeyError[0m: 'y_true'
+KeyError: 'y_true'
+
