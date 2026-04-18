@@ -6,9 +6,6 @@
 .DS_Store
 .DS_Store
 # Ignore runtime outputs
-models/
-results/
-logs/
 .data*
 
 data/
