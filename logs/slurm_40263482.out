@@ -1,0 +1,61 @@
+=== DeepLOB Training Job ===
+Job ID:    40263482
+Node:      v001.ib.bridges2.psc.edu
+GPU:       Tesla V100-SXM2-32GB
+Started:   Fri Apr 24 02:09:34 EDT 2026
+
+Python:   /opt/packages/AI/pytorch_23.02-1.13.1-py3/bin/python3
+PYTHONPATH: /ocean/projects/mth250011p/xxiao7/pyuser/lib/python3.10/site-packages:
+PyTorch: 1.13.1
+CUDA: True Tesla V100-SXM2-32GB
+Extra packages: OK
+
+Device: cuda:0
+GPU: Tesla V100-SXM2-32GB
+
+--- Loading FI-2010 data ---
+Train: (149, 203800)  Val: (149, 50950)  Test: (149, 139587)
+
+============================================================
+Horizon k=1 (10 ev)  (k_idx=0)
+------------------------------------------------------------
+  [Epoch 1] Saved (val_loss=0.9165, val_acc=0.6338)
+Epoch 1/100 | Train: 0.9556 | Val: 0.9165 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:49.758210
+Epoch 2/100 | Train: 0.9560 | Val: 0.9270 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:44.900960
+Epoch 3/100 | Train: 0.9532 | Val: 0.9269 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:46.991180
+Epoch 4/100 | Train: 0.9547 | Val: 0.9501 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:47.286928
+Epoch 5/100 | Train: 0.9556 | Val: 2.0203 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:57.894309
+Epoch 6/100 | Train: 0.9562 | Val: 2.0228 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:54.744943
+Epoch 7/100 | Train: 0.9558 | Val: 2.0146 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:49.166933
+Epoch 8/100 | Train: 0.9559 | Val: 2.0276 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:54.261212
+Epoch 9/100 | Train: 0.9563 | Val: 2.0170 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:51.192756
+Epoch 10/100 | Train: 0.9561 | Val: 2.0273 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:50.251589
+Epoch 11/100 | Train: 0.9561 | Val: 2.0271 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:47.411652
+Epoch 12/100 | Train: 0.9566 | Val: 2.0330 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:49.340698
+Epoch 13/100 | Train: 0.9561 | Val: 2.0334 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:54.410186
+Epoch 14/100 | Train: 0.9566 | Val: 2.0214 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:53.602659
+Epoch 15/100 | Train: 0.9561 | Val: 2.0115 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:51.973297
+Epoch 16/100 | Train: 0.9562 | Val: 2.0365 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:55.848582
+Epoch 17/100 | Train: 0.9564 | Val: 2.0138 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:50.421267
+Epoch 18/100 | Train: 0.9563 | Val: 2.0195 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:50.820156
+Epoch 19/100 | Train: 0.9560 | Val: 2.0207 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:49.901708
+Epoch 20/100 | Train: 0.9566 | Val: 2.0136 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:49.229529
+Epoch 21/100 | Train: 0.9560 | Val: 2.0248 | Val acc: 0.6338 | Best ep: 1 | Δt: 0:01:49.428810
+Early stopping triggered at epoch 21 (patience=20).
+              precision    recall  f1-score   support
+
+        Down     0.0000    0.0000    0.0000     21127
+  Stationary     0.7069    1.0000    0.8283     98602
+          Up     0.0000    0.0000    0.0000     19759
+
+    accuracy                         0.7069    139488
+   macro avg     0.2356    0.3333    0.2761    139488
+weighted avg     0.4997    0.7069    0.5855    139488
+
+
+============================================================
+Horizon k=2 (20 ev)  (k_idx=1)
+------------------------------------------------------------
+  [Epoch 1] Saved (val_loss=1.0207, val_acc=0.5265)
+Epoch 1/100 | Train: 1.0542 | Val: 1.0207 | Val acc: 0.5265 | Best ep: 1 | Δt: 0:01:51.568835
+Epoch 2/100 | Train: 1.0522 | Val: 1.0337 | Val acc: 0.5265 | Best ep: 1 | Δt: 0:01:38.930747

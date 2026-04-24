@@ -1,4 +1,11 @@
 #!/bin/bash
+# =============================================================================
+# submit_analysis.sh — SLURM CPU job: generate FI-2010 analysis artifacts
+# =============================================================================
+# Assumes DeepLOB model weights / predictions already exist (submit_deeplob.sh).
+# Runs scripts/analyze_fi2010.py to generate factor-analysis tables, baseline
+# comparison outputs, and strategy statistics used by the report notebook.
+# =============================================================================
 #SBATCH --job-name=deeplob_analysis
 #SBATCH --partition=RM-shared
 #SBATCH --account=mth250011p
@@ -24,22 +31,12 @@ export PIP_CACHE_DIR=/ocean/projects/mth250011p/xxiao7/pip_cache
 export MPLCONFIGDIR=/ocean/projects/mth250011p/xxiao7/mpl_cache
 mkdir -p $MPLCONFIGDIR
 
-python3 -c "import tqdm, seaborn, torchinfo, statsmodels; print('Packages OK')"
 python3 -c "import torch; print('PyTorch:', torch.__version__, '| CUDA:', torch.cuda.is_available())"
 
-NB_IN=/ocean/projects/mth250011p/xxiao7/DeepLOB/run_deeplob_pytorch.ipynb
-NB_OUT=/ocean/projects/mth250011p/xxiao7/DeepLOB/run_deeplob_pytorch_executed.ipynb
-
-echo "Executing notebook (training skipped — loading saved results)..."
-jupyter nbconvert \
-    --to notebook \
-    --execute \
-    --ExecutePreprocessor.timeout=3600 \
-    --ExecutePreprocessor.kernel_name=python3 \
-    --output "$NB_OUT" \
-    "$NB_IN"
+SCRIPT=/ocean/projects/mth250011p/xxiao7/DeepLOB/scripts/analyze_fi2010.py
+echo "Running FI-2010 analysis script: $SCRIPT"
+python3 "$SCRIPT"
 
 echo ""
 echo "=== Done: $(date) ==="
-echo "Output: $NB_OUT"
-ls -lh /ocean/projects/mth250011p/xxiao7/DeepLOB/results/
+echo "Artifacts written under: /ocean/projects/mth250011p/xxiao7/DeepLOB/results"

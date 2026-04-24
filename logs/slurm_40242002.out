@@ -1,0 +1,47 @@
+=== DeepLOB Reproduction Job ===
+Job ID:    40242002
+Node:      v001.ib.bridges2.psc.edu
+GPU:       Tesla V100-SXM2-32GB
+Started:   Thu Apr 23 16:49:20 EDT 2026
+
+Python:   /opt/packages/AI/pytorch_23.02-1.13.1-py3/bin/python3
+PYTHONPATH: /ocean/projects/mth250011p/xxiao7/pyuser/lib/python3.10/site-packages:
+PyTorch: 1.13.1
+CUDA: True Tesla V100-SXM2-32GB
+Extra packages: OK
+
+Executing notebook: /ocean/projects/mth250011p/xxiao7/DeepLOB/run_deeplob_pytorch.ipynb
+
+=== Job complete: Thu Apr 23 16:49:41 EDT 2026 ===
+Output notebook: /ocean/projects/mth250011p/xxiao7/DeepLOB/run_deeplob_pytorch_executed.ipynb
+total 9.2M
+-rw-r--r-- 1 xxiao7 mth250011p 117K Apr 18 17:14 all_cm_summary.png
+-rw-r--r-- 1 xxiao7 mth250011p 6.4K Apr 22 09:31 all_results.pkl
+-rw-r--r-- 1 xxiao7 mth250011p  221 Apr 22 18:26 analysis_summary.pkl
+-rw-r--r-- 1 xxiao7 mth250011p  60K Apr 22 18:26 baseline_comparison.png
+-rw-r--r-- 1 xxiao7 mth250011p  468 Apr 22 18:26 baseline_model_comparison.csv
+-rw-r--r-- 1 xxiao7 mth250011p  47K Apr 22 09:31 cm_k0.png
+-rw-r--r-- 1 xxiao7 mth250011p  46K Apr 22 09:31 cm_k1.png
+-rw-r--r-- 1 xxiao7 mth250011p  45K Apr 22 09:31 cm_k2.png
+-rw-r--r-- 1 xxiao7 mth250011p  46K Apr 22 09:31 cm_k3.png
+-rw-r--r-- 1 xxiao7 mth250011p  47K Apr 22 09:31 cm_k4.png
+-rw-r--r-- 1 xxiao7 mth250011p  36K Apr 18 17:14 comparison_horizons.png
+-rw-r--r-- 1 xxiao7 mth250011p  32K Apr 18 17:14 confidence_dist.png
+-rw-r--r-- 1 xxiao7 mth250011p 237K Apr 21 17:57 factor_monotonicity.png
+-rw-r--r-- 1 xxiao7 mth250011p 729K Apr 21 17:57 factor_rank_ic.png
+-rw-r--r-- 1 xxiao7 mth250011p 101K Apr 22 17:23 feature_nw_ttest.png
+-rw-r--r-- 1 xxiao7 mth250011p  11K Apr 22 17:23 feature_predictability.csv
+drwxr-xr-x 2 xxiao7 mth250011p 4.0K Apr 22 00:40 optiver
+-rw-r--r-- 1 xxiao7 mth250011p  370 Apr 22 09:31 performance_summary.csv
+-rw-r--r-- 1 xxiao7 mth250011p 1.4M Apr 18 17:14 preds_k0.npz
+-rw-r--r-- 1 xxiao7 mth250011p 1.5M Apr 18 17:14 preds_k1.npz
+-rw-r--r-- 1 xxiao7 mth250011p 1.5M Apr 18 17:14 preds_k2.npz
+-rw-r--r-- 1 xxiao7 mth250011p 1.5M Apr 18 17:14 preds_k3.npz
+-rw-r--r-- 1 xxiao7 mth250011p 1.5M Apr 18 17:14 preds_k4.npz
+-rw-r--r-- 1 xxiao7 mth250011p 2.4K Apr 22 17:44 qualified_factors.csv
+-rw-r--r-- 1 xxiao7 mth250011p 238K Apr 21 17:57 qualified_monotonicity.png
+-rw-r--r-- 1 xxiao7 mth250011p 3.2K Apr 22 17:23 rolling_stability.csv
+-rw-r--r-- 1 xxiao7 mth250011p  46K Apr 22 17:23 rolling_ttest.png
+-rw-r--r-- 1 xxiao7 mth250011p 2.9K Apr 18 17:14 statistical_tests.csv
+-rw-r--r-- 1 xxiao7 mth250011p  37K Apr 22 18:26 trading_profit_ttest.png
+-rw-r--r-- 1 xxiao7 mth250011p  609 Apr 22 18:26 trading_strategy_stats.csv

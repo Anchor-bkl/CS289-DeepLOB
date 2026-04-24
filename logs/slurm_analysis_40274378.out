@@ -1,0 +1,10 @@
+=== DeepLOB Analysis Job ===
+Job ID: 40274378  Node: r318.ib.bridges2.psc.edu  Started: Fri Apr 24 16:14:10 EDT 2026
+PyTorch: 1.13.1 | CUDA: False
+Running FI-2010 analysis script: /ocean/projects/mth250011p/xxiao7/DeepLOB/scripts/analyze_fi2010.py
+FI-2010 analysis complete.
+Qualified factors: 21
+Saved baseline comparison to results/baseline_model_comparison.csv
+
+=== Done: Fri Apr 24 16:15:00 EDT 2026 ===
+Artifacts written under: /ocean/projects/mth250011p/xxiao7/DeepLOB/results
