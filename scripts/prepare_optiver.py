@@ -31,16 +31,15 @@ Label construction:
            2 (Up)         if r_t >  θ
 
 Normalization:
-  By default, each stock is normalized causally with statistics from the
-  previous 5 `time_id` buckets. This follows the spirit of the LSE setup in
-  DeepLOB, where rolling standardization uses only past information.
-  A faster event-wise rolling normalization is also available as an option.
+    By default, each stock is normalized with a causal event-wise rolling
+    Z-score and clipped to a bounded range. The older bucket-level `time-id`
+    normalization is still available when strict bucket-based standardization is
+    desired.
 
 Train/Transfer split:
-  112 stocks total.
-  Train stocks  : stock IDs 0..79   (80 stocks)
-  Transfer stocks: stock IDs 80..111 (32 stocks)
-  The split is deterministic (sorted stock_id) so it is reproducible.
+    The stock split is configurable. By default, the held-out transfer stocks
+    are chosen with a deterministic interleaved split so the holdout set is
+    spread across the stock-id range instead of taking one contiguous block.
 
 Usage
 -----
@@ -48,6 +47,7 @@ Usage
 """
 import argparse
 import io
+import json
 import os
 import sys
 import zipfile
@@ -71,10 +71,18 @@ def parse_args():
                    help="Threshold multiplier α for label construction (default: 0.002)")
     p.add_argument("--roll-norm", type=int, default=100,
                    help="Rolling event window for event-wise normalization (default: 100)")
-    p.add_argument("--norm-mode", choices=["time-id", "event"], default="time-id",
-                   help="Causal normalization mode (default: time-id)")
+    p.add_argument("--norm-mode", choices=["time-id", "event"], default="event",
+                   help="Causal normalization mode (default: event)")
     p.add_argument("--norm-time-window", type=int, default=5,
                    help="Number of past time_id buckets used for causal normalization (default: 5)")
+    p.add_argument("--norm-clip", type=float, default=12.0,
+                   help="Clip normalized features to +/- this value; <=0 disables clipping")
+    p.add_argument("--num-transfer-stocks", type=int, default=10,
+                   help="Number of held-out transfer stocks (default: 10)")
+    p.add_argument("--split-mode", choices=["sorted", "random", "interleaved"], default="interleaved",
+                   help="How to choose held-out transfer stocks (default: interleaved)")
+    p.add_argument("--split-seed", type=int, default=42,
+                   help="Seed used when --split-mode=random")
     p.add_argument("--horizons", nargs="+", type=int, default=[1, 2, 3, 5, 10],
                    help="Prediction horizons in events (default: 1 2 3 5 10)")
     p.add_argument("--force", action="store_true",
@@ -108,7 +116,13 @@ _IDX_BID_P1 = 2   # bid_price1
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-def rolling_zscore(arr: np.ndarray, window: int) -> np.ndarray:
+def clip_normalized_features(arr: np.ndarray, clip_value: float) -> np.ndarray:
+    if clip_value > 0:
+        arr = np.clip(arr, -clip_value, clip_value)
+    return arr.astype(np.float32, copy=False)
+
+
+def rolling_zscore(arr: np.ndarray, window: int, clip_value: float = 0.0) -> np.ndarray:
     """Rolling Z-score normalisation along axis 0 (event axis).
 
     Uses a causal (backward-looking) window so there is no lookahead bias.
@@ -121,10 +135,15 @@ def rolling_zscore(arr: np.ndarray, window: int) -> np.ndarray:
     mu   = roll.mean().values
     std  = roll.std(ddof=0).values                         # population std, no NaN at t=0
     std  = np.where(std < 1e-8, 1.0, std)                  # avoid div-by-zero
-    return ((arr - mu) / std).astype(np.float32)
+    return clip_normalized_features((arr - mu) / std, clip_value)
 
 
-def causal_time_id_zscore(df_book: pd.DataFrame, feature_cols: list[str], window: int) -> np.ndarray:
+def causal_time_id_zscore(
+    df_book: pd.DataFrame,
+    feature_cols: list[str],
+    window: int,
+    clip_value: float = 0.0,
+) -> np.ndarray:
     """Normalize each time_id bucket using only previous buckets' statistics.
 
     This is a bucket-level approximation to the paper's rolling daily
@@ -156,7 +175,46 @@ def causal_time_id_zscore(df_book: pd.DataFrame, feature_cols: list[str], window
     std = df_norm[[f"std_{c}" for c in feature_cols]].to_numpy(dtype=np.float64)
     std = np.where(std < 1e-8, 1.0, std)
     arr = df_book[feature_cols].to_numpy(dtype=np.float64)
-    return ((arr - mu) / std).astype(np.float32)
+    return clip_normalized_features((arr - mu) / std, clip_value)
+
+
+def make_stock_split(
+    stock_ids: list[int],
+    num_transfer_stocks: int,
+    split_mode: str,
+    split_seed: int,
+) -> tuple[list[int], list[int]]:
+    stock_ids = sorted(stock_ids)
+    n_total = len(stock_ids)
+    if num_transfer_stocks <= 0 or num_transfer_stocks >= n_total:
+        raise ValueError(
+            f"num_transfer_stocks must be in [1, {n_total - 1}], got {num_transfer_stocks}"
+        )
+
+    if split_mode == "sorted":
+        transfer_ids = stock_ids[-num_transfer_stocks:]
+    elif split_mode == "random":
+        rng = np.random.default_rng(split_seed)
+        pick = np.sort(rng.choice(n_total, size=num_transfer_stocks, replace=False))
+        transfer_ids = [stock_ids[i] for i in pick]
+    else:
+        step = n_total / num_transfer_stocks
+        pick = np.floor((np.arange(num_transfer_stocks) + 0.5) * step).astype(int)
+        pick = np.clip(pick, 0, n_total - 1)
+        pick = list(dict.fromkeys(pick.tolist()))
+        if len(pick) < num_transfer_stocks:
+            chosen = set(pick)
+            for idx in range(n_total):
+                if idx not in chosen:
+                    pick.append(idx)
+                    chosen.add(idx)
+                if len(pick) == num_transfer_stocks:
+                    break
+        transfer_ids = [stock_ids[i] for i in sorted(pick[:num_transfer_stocks])]
+
+    transfer_set = set(transfer_ids)
+    train_ids = [sid for sid in stock_ids if sid not in transfer_set]
+    return train_ids, transfer_ids
 
 
 def make_labels(mid: np.ndarray, horizons: list, alpha: float,
@@ -195,7 +253,8 @@ def make_labels(mid: np.ndarray, horizons: list, alpha: float,
 
 
 def process_stock(df_book: pd.DataFrame, horizons: list, alpha: float,
-                  roll_norm: int, norm_mode: str, norm_time_window: int) -> dict | None:
+                  roll_norm: int, norm_mode: str, norm_time_window: int,
+                  norm_clip: float) -> dict | None:
     """Process a single stock's book data into normalised LOB arrays.
 
     Parameters
@@ -233,9 +292,17 @@ def process_stock(df_book: pd.DataFrame, horizons: list, alpha: float,
 
     # Causal normalization
     if norm_mode == "time-id" and "time_id" in df_book.columns:
-        X_norm = causal_time_id_zscore(df_book, LOB_FEATURE_COLS, window=norm_time_window)
+        df_norm_source = df_book[["time_id"]].copy()
+        for col in LOB_FEATURE_COLS:
+            df_norm_source[col] = df_x[col].to_numpy(dtype=np.float64)
+        X_norm = causal_time_id_zscore(
+            df_norm_source,
+            LOB_FEATURE_COLS,
+            window=norm_time_window,
+            clip_value=norm_clip,
+        )
     else:
-        X_norm = rolling_zscore(X_raw, window=roll_norm).astype(np.float32)
+        X_norm = rolling_zscore(X_raw, window=roll_norm, clip_value=norm_clip)
 
     # Labels for each horizon
     label_dict = make_labels(mid, horizons, alpha=alpha)
@@ -277,15 +344,25 @@ def main():
         print(f"Found {len(stock_ids)} stocks: {stock_ids[:5]} ... {stock_ids[-5:]}")
 
         # Split into train / transfer
-        n_train    = 80
-        train_ids  = stock_ids[:n_train]
-        transfer_ids = stock_ids[n_train:]
-        print(f"Train stocks  : {len(train_ids)}  ({train_ids[0]}..{train_ids[-1]})")
-        print(f"Transfer stocks: {len(transfer_ids)} ({transfer_ids[0]}..{transfer_ids[-1]})")
+        train_ids, transfer_ids = make_stock_split(
+            stock_ids,
+            num_transfer_stocks=args.num_transfer_stocks,
+            split_mode=args.split_mode,
+            split_seed=args.split_seed,
+        )
+        print(f"Train stocks   : {len(train_ids)}  ({train_ids[:5]} ... {train_ids[-5:]})")
+        print(f"Transfer stocks: {len(transfer_ids)} {transfer_ids}")
 
         # Save split metadata
-        split = {"train": train_ids, "transfer": transfer_ids}
-        import json
+        split = {
+            "train": train_ids,
+            "transfer": transfer_ids,
+            "split_mode": args.split_mode,
+            "split_seed": args.split_seed,
+            "num_transfer_stocks": args.num_transfer_stocks,
+            "norm_mode": args.norm_mode,
+            "norm_clip": args.norm_clip,
+        }
         with open(os.path.join(args.out_dir, "stock_split.json"), "w") as f:
             json.dump(split, f, indent=2)
 
@@ -310,6 +387,7 @@ def main():
                 roll_norm=args.roll_norm,
                 norm_mode=args.norm_mode,
                 norm_time_window=args.norm_time_window,
+                norm_clip=args.norm_clip,
             )
             if result is None:
                 print(f"  [{i+1}/{len(stock_ids)}] stock {sid}: skip (insufficient data)")

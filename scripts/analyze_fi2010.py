@@ -39,7 +39,7 @@ from sklearn.preprocessing import StandardScaler
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-RESULT_DIR = os.path.join(BASE_DIR, "results")
+RESULT_DIR = os.environ.get("FI_RESULT_DIR", os.path.join(BASE_DIR, "results"))
 
 FEATURE_INFO = {
     "u2": (40, 60, "Spread & Mid-Price"),
@@ -439,7 +439,8 @@ def part_e_baselines(train: np.ndarray, test: np.ndarray, qualified: pd.DataFram
     mlp_pred = mlp.predict(x_test)
 
     deep = pd.read_csv(os.path.join(RESULT_DIR, "performance_summary.csv"))
-    deep_row = deep.iloc[0]
+    deep_metrics = ["Accuracy", "Cohen κ", "MCC", "F1-Weighted"]
+    deep_row = deep.sort_values(deep_metrics, ascending=False).iloc[0]
 
     rows = []
     for name, pred in [("Ridge Logistic Regression", ridge_pred), ("MLP (64-32)", mlp_pred)]:
@@ -461,7 +462,7 @@ def part_e_baselines(train: np.ndarray, test: np.ndarray, qualified: pd.DataFram
 
     rows.append(
         {
-            "Model": "DeepLOB",
+            "Model": f"DeepLOB ({deep_row['Horizon']})",
             "Accuracy": float(deep_row["Accuracy"]),
             "Cohen κ": float(deep_row["Cohen κ"]),
             "MCC": float(deep_row["MCC"]),

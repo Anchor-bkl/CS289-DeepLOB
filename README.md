@@ -13,6 +13,12 @@ The design principle is:
 - **scripts + SLURM jobs** do heavy computation,
 - **notebooks** load saved artifacts and present a clean project report.
 
+The final report scope is now intentionally narrower than the full experiment history:
+
+- **FI report slice**: only `k=3 / 4 / 5` (`30 / 50 / 100` events)
+- **Optiver report slice**: only `k=5` on held-out stocks `5, 17, 42, 108, 120`
+- the cleaned project keeps only these retained configurations in the active tree
+
 ---
 
 ## 1. Repository map
@@ -35,7 +41,7 @@ DeepLOB/
 │   └── optiver_specific_s*_k*.pt
 ├── results/
 │   ├── *.png / *.csv / *.npz / *.pkl       # FI-2010 generated artifacts
-│   └── optiver/                            # Optiver generated artifacts
+│   └── optiver/                            # final retained Optiver artifacts
 ├── scripts/
 │   ├── train_deeplob.py
 │   ├── analyze_fi2010.py
@@ -44,8 +50,7 @@ DeepLOB/
 │   └── analyze_optiver.py
 ├── run_deeplob_pytorch.ipynb               # FI-2010 final report notebook
 ├── run_optiver.ipynb                       # Optiver final report notebook
-├── submit_deeplob.sh                       # FI-2010 GPU training job
-├── submit_analysis.sh                      # FI-2010 CPU analysis job
+├── submit_deeplob.sh                       # FI-2010 end-to-end training + analysis job
 └── submit_optiver.sh                       # Optiver end-to-end GPU workflow
 ```
 
@@ -149,9 +154,9 @@ Important packages used by the workflows:
 
 ### What this workflow does
 
-1. Train one DeepLOB model per prediction horizon.
+1. Train the retained DeepLOB horizons only: `k=3 / 4 / 5`.
 2. Save loss curves, confusion matrices, predictions, and summary metrics.
-3. Run CPU-side feature and baseline analysis using saved predictions.
+3. Run feature testing, qualified-factor selection, baseline manual-factor models, and trading-style analysis in the same job.
 4. Present everything in `run_deeplob_pytorch.ipynb`.
 
 ### Entry points
@@ -167,38 +172,40 @@ This launches:
 
 ```bash
 python3 scripts/train_deeplob.py
+python3 scripts/analyze_fi2010.py
 ```
 
 ### FI technical details
 
 - **Input**: FI-2010 LOB tensor with shape `(B, 1, T, 40)`.
 - **Feature order** follows the original DeepLOB layout.
-- **Model**: 3 convolution blocks + inception module + LSTM + FC classifier.
+- **Model**: 3 convolution blocks + inception module + LSTM + FC classifier,
+   with an optional auxiliary regression head that predicts same-horizon future
+   log return from the shared representation.
 - **Training policy used in the final report**:
   - batch size `32`
   - lookback `100`
   - max epochs `100`
-  - early stopping patience `20`
-  - stabilized optimizer setup for this PyTorch reproduction:
-    - learning rate `1e-3`
-    - weight decay `1e-4`
-    - dropout `0.2`
+  - `--horizon-profile adaptive`, which assigns separate learning-rate,
+    regularization, patience, and monitor choices to `k_idx=0..4`
+   - an auxiliary Huber loss on future log return is enabled by default in the
+      adaptive profile to regularize short horizons whose validation loss is most
+      jagged
+  - short horizons use macro-F1/MCC-oriented checkpointing to reduce
+    stationary-class collapse visible in their confusion matrices
+  - longer horizons use validation-loss checkpointing with stronger
+    regularization because their loss curves overfit earlier
+  - the 100-event horizon (`k_idx=4`, shown as `k=5`) uses:
+    - learning rate `7e-4`
+    - weight decay `3e-4`
+    - dropout `0.30`
+    - label smoothing `0.02`
+    - gradient clipping `1.0`
+    - checkpoint / early stopping monitored by validation loss
 
 ### Why the exact paper optimizer was not kept verbatim
 
 The direct `Adam + lr=0.01` paper-style setting caused majority-class collapse in this environment: validation accuracy froze at the stationary-class prior and validation loss exploded. The current setup preserves the **paper architecture and experimental logic** but uses a **stabilized optimizer configuration** that trains reliably on this codebase.
-
-#### Step A2 — CPU analysis
-
-```bash
-sbatch submit_analysis.sh
-```
-
-This launches:
-
-```bash
-python3 scripts/analyze_fi2010.py
-```
 
 ### FI analysis outputs
 
@@ -219,7 +226,7 @@ Representative outputs:
 - `results/trading_strategy_stats.csv`
 - related `png` visualizations
 
-#### Step A3 — notebook report
+#### Step A2 — notebook report
 
 Open and run:
 
@@ -227,7 +234,7 @@ Open and run:
 run_deeplob_pytorch.ipynb
 ```
 
-This notebook is the **single FI-2010 report notebook**. It should be run after the corresponding artifacts exist in `results/` and `models/`.
+This notebook is the single FI-2010 report notebook. It should be run after `submit_deeplob.sh` finishes.
 
 ---
 
@@ -241,20 +248,21 @@ This notebook is the **single FI-2010 report notebook**. It should be run after 
 4. Evaluate zero-shot on unseen stocks.
 5. Fine-tune on held-out stocks.
 6. Train same-stock temporal out-of-sample models.
-7. Generate paper-style transfer figures and notebook-ready summaries.
+7. Optionally generate paper-style transfer figures and notebook-ready summaries.
 
 ### Entry point
 
 ```bash
 cd /ocean/projects/mth250011p/xxiao7/DeepLOB
 sbatch submit_optiver.sh
+sbatch --export=ALL,OPTIVER_LABEL_MODE=rolling-quantile-3class submit_optiver.sh
 ```
 
-This SLURM wrapper runs three phases:
+This SLURM wrapper runs two phases by default and a third optional phase when `OPTIVER_RUN_ANALYSIS=1`:
 
 1. `scripts/prepare_optiver.py`
 2. `scripts/train_optiver.py`
-3. `scripts/analyze_optiver.py`
+3. `scripts/analyze_optiver.py` (optional)
 
 ### Optiver technical details
 
@@ -285,7 +293,13 @@ Then a volatility-adaptive threshold produces:
 
 #### Causal normalization
 
-To stay close to the DeepLOB paper's LSE philosophy, preprocessing uses **causal time_id-based normalization**: each bucket is standardized only with statistics from **past buckets**, avoiding future leakage.
+Preprocessing now defaults to a **causal event-wise rolling Z-score with clipping**. This keeps feature scales bounded across stocks while preserving the no-lookahead property. The older `time-id` bucket normalization is still available as an opt-in mode, but it is no longer the default because some stocks produced numerically extreme normalized values under that scheme.
+
+Within the retained final Optiver workflow, the base-training sample mode is fixed to `volatility`.
+
+#### Train / transfer split
+
+The stock split is configurable in `scripts/prepare_optiver.py`. The current default holds out **10 interleaved stocks** rather than taking one contiguous `80/32` block, so the transfer set is spread across the stock-id range and the base model trains on the remaining **102 stocks**.
 
 #### Transfer regimes implemented
 
@@ -302,25 +316,44 @@ To stay close to the DeepLOB paper's LSE philosophy, preprocessing uses **causal
 
 #### Training stabilizers
 
-Because Optiver labels are more imbalanced than FI-2010, the workflow uses:
+Because Optiver labels and confusion matrices were much less stable than
+FI-2010, the current workflow intentionally does **not** reuse the FI horizon
+parameters. It uses:
 
-- class-balanced cross-entropy,
-- smaller mini-batches,
-- early stopping based on macro-F1,
-- lower learning rates than the FI workflow.
+- per-stock relabeling during training to prevent trivial majority-class predictions:
+   the retained Optiver workflow now keeps two 3-class variants:
+   `Original 3` uses the prepared adaptive rolling-std labels via
+   `--label-mode original`, while `rolling 3` uses a rolling historical
+   quantile threshold on each stock's k-step returns via
+   `--label-mode rolling-quantile-3class --quantile-stationary 0.2`;
+   explicit CLI / environment label overrides are applied after the adaptive k=5
+   defaults, so retained overrides now win instead of being silently reset,
+- focal loss plus horizon-specific class balancing,
+- checkpoint / early stopping monitored by validation κ,
+- dropout before the classifier head,
+- gradient clipping,
+- validation-loss plateau LR scheduling,
+- temporal validation during base training so early stopping sees later-in-time windows instead of a random window mix from the same stock,
+- an auxiliary log-return regression head with Huber loss so the shared trunk
+   is trained against both discrete direction labels and continuous future
+   price moves,
+- horizon-specific transfer settings:
+  - k=1 keeps transfer to the LSTM/head with a smaller base LR,
+   - k=5 and k=10 switch to stronger balancing and fine-tune
+      `conv3 + LSTM + head` to adapt late spatial-temporal features under
+      stronger cross-stock distribution shift.
 
 ### Optiver outputs
 
 Training writes:
 
-- `results/optiver/base_metrics_k*.pkl`
-- `results/optiver/transfer_metrics_k*.pkl`
-- `results/optiver/specific_metrics_k*.pkl`
-- `results/optiver/base_loss_k*.png`
-- `results/optiver/transfer_comparison_k*.png`
-- `results/optiver/transfer_regimes_k*.png`
+- `results/optiver/classification_original3/` for `Original 3`
+- `results/optiver/classification_rolling3_w20000/` for the default `rolling 3`
+- inside each mode-specific directory: `base_metrics_k*.pkl`, `transfer_metrics_k*.pkl`, `specific_metrics_k*.pkl`, `base_loss_k*.png`, `transfer_comparison_k*.png`, and related training figures
 
-Analysis writes:
+Practical note: full-window base training on all prepared Optiver events is not the default because the processed train split contains on the order of $10^8$ valid windows. The workflow therefore keeps a configurable per-stock cap for base and transfer sampling, while still allowing `<=0` to request the uncapped path for targeted experiments.
+
+When `OPTIVER_RUN_ANALYSIS=1`, analysis also writes:
 
 - `figure6_transfer_accuracy.png`
 - `figure7_transfer_profit_tstats.png`
@@ -366,7 +399,6 @@ This makes them suitable for:
 
 ```bash
 sbatch submit_deeplob.sh
-sbatch submit_analysis.sh
 ```
 
 Then open:
@@ -379,7 +411,12 @@ run_deeplob_pytorch.ipynb
 
 ```bash
 sbatch submit_optiver.sh
+sbatch --export=ALL,OPTIVER_LABEL_MODE=rolling-quantile-3class submit_optiver.sh
 ```
+
+This training-first path now keeps two retained Optiver variants for the final `k=5` slice: `Original 3` and `rolling 3`.
+
+If you also need the paper-style figures in the same output directory, rerun with `OPTIVER_RUN_ANALYSIS=1`.
 
 Then open:
 
