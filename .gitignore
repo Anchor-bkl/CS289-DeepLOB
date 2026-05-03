@@ -24,3 +24,14 @@ scripts/__pycache__/
 # Temporary notebook variants
 *.ipynb_checkpoints/
 run_deeplob_pytorch_executed.ipynb
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.xdv
