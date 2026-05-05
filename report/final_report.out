@@ -1,0 +1,25 @@
+\BOOKMARK [1][-]{section.1}{Problem Definition}{}% 1
+\BOOKMARK [1][-]{section.2}{Connection to Course Content}{}% 2
+\BOOKMARK [1][-]{section.3}{Prior Work}{}% 3
+\BOOKMARK [1][-]{section.4}{Data and Experimental Setup}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{FI-2010}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Optiver}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.3}{Evaluation Metrics}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.4}{Report Scope}{section.4}% 8
+\BOOKMARK [1][-]{section.5}{Approach}{}% 9
+\BOOKMARK [2][-]{subsection.5.1}{DeepLOB Reproduction on FI-2010: Two Training Profiles}{section.5}% 10
+\BOOKMARK [2][-]{subsection.5.2}{Microstructure Analysis on FI-2010}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.3}{DeepLOBLite for Optiver: Two Label Modes}{section.5}% 12
+\BOOKMARK [1][-]{section.6}{Our Contribution}{}% 13
+\BOOKMARK [2][-]{subsection.6.1}{Contribution 1: A Reproducible DeepLOB Pipeline with Two Validated Training Profiles}{section.6}% 14
+\BOOKMARK [2][-]{subsection.6.2}{Contribution 2: Extending the FI-2010 Study Beyond Raw Benchmark Accuracy}{section.6}% 15
+\BOOKMARK [2][-]{subsection.6.3}{Contribution 3: Controlled Transfer to Optiver with a Label-Mode Comparison}{section.6}% 16
+\BOOKMARK [1][-]{section.7}{Results and Discussion}{}% 17
+\BOOKMARK [2][-]{subsection.7.1}{FI-2010 Classification Performance: Paper vs Adaptive Profile}{section.7}% 18
+\BOOKMARK [2][-]{subsection.7.2}{FI-2010 Baselines and Factor Analysis}{section.7}% 19
+\BOOKMARK [2][-]{subsection.7.3}{Optiver Transfer Results \(rolling3 Label Mode\)}{section.7}% 20
+\BOOKMARK [2][-]{subsection.7.4}{Why Rolling-Quantile Labels and Fine-Tuning Work}{section.7}% 21
+\BOOKMARK [2][-]{subsection.7.5}{LIME Interpretability Analysis \(Optiver\)}{section.7}% 22
+\BOOKMARK [1][-]{section.8}{Code and Reproducibility}{}% 23
+\BOOKMARK [1][-]{section.9}{Limitations and Future Work}{}% 24
+\BOOKMARK [1][-]{section.10}{Conclusion}{}% 25

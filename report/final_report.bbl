@@ -1,0 +1,21 @@
+\begin{thebibliography}{1}
+
+\bibitem{kercheval2015modelling}
+Alec~N. Kercheval and Yuan Zhang.
+\newblock Modelling high-frequency limit order book dynamics with support
+  vector machines.
+\newblock {\em Quantitative Finance}, 15(8):1315--1329, 2015.
+
+\bibitem{ntakaris2018benchmark}
+Apostolos Ntakaris, Mikko Magris, Juho Kanniainen, Moncef Gabbouj, and
+  Alexandros Iosifidis.
+\newblock Benchmark dataset for mid-price forecasting of limit order book data.
+\newblock {\em Journal of Forecasting}, 37(8):852--866, 2018.
+
+\bibitem{zhang2019deeplob}
+Zihao Zhang, Stefan Zohren, and Stephen Roberts.
+\newblock Deeplob: Deep convolutional neural networks for limit order books.
+\newblock {\em IEEE Transactions on Signal Processing}, 67(11):3001--3012,
+  2019.
+
+\end{thebibliography}

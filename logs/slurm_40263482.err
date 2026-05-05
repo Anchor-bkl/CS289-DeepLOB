@@ -1,86 +1,0 @@
-Unloading the anaconda2 module (if loaded)...
-Unloading the anaconda3 module (if loaded)...
-Pytorch 1.13.1
------------------------------
-
-Description
------------
-The modulefile AI/pytorch_23.02-1.13.1-py3 provides a Pytorch 1.13.1
-development environment for Artificial Intelligence(AI)/Machine
-Learning(ML)/Big Data(BD) on top of Python 3.
-
-Module contents
----------------
-Several popular libraries are included in this environment, such as:
-    bokeh, matplotlib, mkl, numba, numpy, pandas, pillow, scikit-image,
-scikit-learn, torchaudio, torchvision.
-
-To check the full list of available packages in this environment, first
-activate it and then run the command
-    conda list
-
-* beautifulsoup4 4.11.1
-* blas 1.0
-* bokeh 3.0.3
-* cudatoolkit 10.1.243
-* cudnn 8.0.4
-* cython 0.29.32
-* ipython 8.8.0
-* matplotlib 3.6.2
-* mkl 2021.4.0
-* nccl 2.8.3.1
-* notebook 6.5.2
-* numba 0.55.1
-* numpy 1.21.5
-* pandas 1.5.2
-* pillow 9.3.0
-* python 3.10.9
-* pytorch 1.13.1
-* scikit-image 0.19.3
-* scikit-learn 1.0.1
-* scikit-learn-intelex 2021.20221004.171507
-* scipy 1.10.0
-* torch 1.13.1
-* torchaudio 0.13.1
-* torchvision 0.14.1
-
-If you need to further customize this environment (e.g., install additional
-packages, or upgrade a particular package),
-you could first clone this environment as follows:
-    conda create --prefix <path to a dir in which you can write> --clone $ENV
-Then activate the newly spawned environment and proceed with your
-customization.
-
-To get further help with conda usage, you can try one of the following:
-    conda -h
-    conda <command> -h
-
-Module Activation
--------------------
-The following commands have been executed for activating the module:
-    # module load AI/pytorch_23.02-1.13.1-py3
-    # source /opt/packages/anaconda3/2020.11/etc/profile.d/conda.sh # conda
-init
-    # conda activate /opt/packages/AI/pytorch_23.02-1.13.1-py3
-    # (/opt/packages/AI/pytorch_23.02-1.13.1-py3) USERNAME@BRIDGES-2:~ $ # <<
-Your prompt should have changed to something similar.
-
-For deactivating this module, run either of the following commands:
-    conda deactivate
-    # or
-    module unload AI/pytorch_23.02-1.13.1-py3
-
-[1;32mThe module has been activated and is ready to be used.[0m
-
-Epochs:   0%|          | 0/100 [00:00<?, ?it/s]Epochs:   1%|          | 1/100 [01:49<3:01:06, 109.76s/it]Epochs:   2%|▏         | 2/100 [03:34<2:54:37, 106.91s/it]Epochs:   3%|▎         | 3/100 [05:21<2:52:53, 106.95s/it]Epochs:   4%|▍         | 4/100 [07:08<2:51:19, 107.08s/it]Epochs:   5%|▌         | 5/100 [09:06<2:55:48, 111.03s/it]Epochs:   6%|▌         | 6/100 [11:01<2:55:55, 112.29s/it]Epochs:   7%|▋         | 7/100 [12:50<2:52:28, 111.27s/it]Epochs:   8%|▊         | 8/100 [14:45<2:52:05, 112.23s/it]Epochs:   9%|▉         | 9/100 [16:36<2:49:48, 111.97s/it]Epochs:  10%|█         | 10/100 [18:26<2:47:09, 111.44s/it]Epochs:  11%|█         | 11/100 [20:14<2:43:28, 110.21s/it]Epochs:  12%|█▏        | 12/100 [22:03<2:41:14, 109.94s/it]Epochs:  13%|█▎        | 13/100 [23:57<2:41:22, 111.30s/it]Epochs:  14%|█▍        | 14/100 [25:51<2:40:31, 111.99s/it]Epochs:  15%|█▌        | 15/100 [27:43<2:38:38, 111.99s/it]Epochs:  16%|█▌        | 16/100 [29:39<2:38:24, 113.15s/it]Epochs:  17%|█▋        | 17/100 [31:29<2:35:23, 112.33s/it]Epochs:  18%|█▊        | 18/100 [33:20<2:32:53, 111.88s/it]Epochs:  19%|█▉        | 19/100 [35:10<2:30:13, 111.28s/it]Epochs:  20%|██        | 20/100 [36:59<2:27:33, 110.67s/it]Epochs:  20%|██        | 20/100 [38:49<2:35:16, 116.46s/it]
-/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1308: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1308: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1308: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1308: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-/opt/packages/AI/pytorch_23.02-1.13.1-py3/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1308: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-Epochs:   0%|          | 0/100 [00:00<?, ?it/s]Epochs:   1%|          | 1/100 [01:51<3:04:05, 111.57s/it]Epochs:   2%|▏         | 2/100 [03:30<2:50:05, 104.14s/it]slurmstepd: error: *** JOB 40263482 ON v001 CANCELLED AT 2026-04-24T02:54:19 ***

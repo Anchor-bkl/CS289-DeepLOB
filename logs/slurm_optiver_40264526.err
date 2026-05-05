@@ -1,86 +1,0 @@
-Unloading the anaconda2 module (if loaded)...
-Unloading the anaconda3 module (if loaded)...
-Pytorch 1.13.1
------------------------------
-
-Description
------------
-The modulefile AI/pytorch_23.02-1.13.1-py3 provides a Pytorch 1.13.1
-development environment for Artificial Intelligence(AI)/Machine
-Learning(ML)/Big Data(BD) on top of Python 3.
-
-Module contents
----------------
-Several popular libraries are included in this environment, such as:
-    bokeh, matplotlib, mkl, numba, numpy, pandas, pillow, scikit-image,
-scikit-learn, torchaudio, torchvision.
-
-To check the full list of available packages in this environment, first
-activate it and then run the command
-    conda list
-
-* beautifulsoup4 4.11.1
-* blas 1.0
-* bokeh 3.0.3
-* cudatoolkit 10.1.243
-* cudnn 8.0.4
-* cython 0.29.32
-* ipython 8.8.0
-* matplotlib 3.6.2
-* mkl 2021.4.0
-* nccl 2.8.3.1
-* notebook 6.5.2
-* numba 0.55.1
-* numpy 1.21.5
-* pandas 1.5.2
-* pillow 9.3.0
-* python 3.10.9
-* pytorch 1.13.1
-* scikit-image 0.19.3
-* scikit-learn 1.0.1
-* scikit-learn-intelex 2021.20221004.171507
-* scipy 1.10.0
-* torch 1.13.1
-* torchaudio 0.13.1
-* torchvision 0.14.1
-
-If you need to further customize this environment (e.g., install additional
-packages, or upgrade a particular package),
-you could first clone this environment as follows:
-    conda create --prefix <path to a dir in which you can write> --clone $ENV
-Then activate the newly spawned environment and proceed with your
-customization.
-
-To get further help with conda usage, you can try one of the following:
-    conda -h
-    conda <command> -h
-
-Module Activation
--------------------
-The following commands have been executed for activating the module:
-    # module load AI/pytorch_23.02-1.13.1-py3
-    # source /opt/packages/anaconda3/2020.11/etc/profile.d/conda.sh # conda
-init
-    # conda activate /opt/packages/AI/pytorch_23.02-1.13.1-py3
-    # (/opt/packages/AI/pytorch_23.02-1.13.1-py3) USERNAME@BRIDGES-2:~ $ # <<
-Your prompt should have changed to something similar.
-
-For deactivating this module, run either of the following commands:
-    conda deactivate
-    # or
-    module unload AI/pytorch_23.02-1.13.1-py3
-
-[1;32mThe module has been activated and is ready to be used.[0m
-
-Base training:   0%|          | 0/20 [00:00<?, ?it/s]Base training:   5%|▌         | 1/20 [00:48<15:17, 48.29s/it]Base training:  10%|█         | 2/20 [01:36<14:27, 48.19s/it]Base training:  15%|█▌        | 3/20 [02:23<13:34, 47.88s/it]Base training:  20%|██        | 4/20 [03:11<12:43, 47.73s/it]Base training:  25%|██▌       | 5/20 [03:59<11:59, 47.98s/it]Base training:  30%|███       | 6/20 [04:48<11:13, 48.13s/it]Base training:  35%|███▌      | 7/20 [05:38<10:32, 48.68s/it]Base training:  40%|████      | 8/20 [06:26<09:42, 48.58s/it]Base training:  45%|████▌     | 9/20 [07:14<08:51, 48.29s/it]Base training:  50%|█████     | 10/20 [08:01<08:00, 48.06s/it]Base training:  55%|█████▌    | 11/20 [08:49<07:11, 47.91s/it]Base training:  60%|██████    | 12/20 [09:36<06:22, 47.82s/it]Base training:  65%|██████▌   | 13/20 [10:24<05:34, 47.77s/it]Base training:  70%|███████   | 14/20 [11:12<04:46, 47.74s/it]Base training:  75%|███████▌  | 15/20 [11:59<03:58, 47.73s/it]Base training:  80%|████████  | 16/20 [12:47<03:10, 47.61s/it]Base training:  85%|████████▌ | 17/20 [13:34<02:22, 47.65s/it]Base training:  90%|█████████ | 18/20 [14:22<01:35, 47.72s/it]Base training:  95%|█████████▌| 19/20 [15:10<00:47, 47.71s/it]Base training: 100%|██████████| 20/20 [15:58<00:00, 47.77s/it]Base training: 100%|██████████| 20/20 [15:58<00:00, 47.92s/it]
-TL stock 90:   0%|          | 0/10 [00:00<?, ?it/s]TL stock 90:  10%|█         | 1/10 [00:00<00:07,  1.26it/s]TL stock 90:  20%|██        | 2/10 [00:01<00:05,  1.59it/s]TL stock 90:  30%|███       | 3/10 [00:01<00:04,  1.74it/s]TL stock 90:  40%|████      | 4/10 [00:02<00:03,  1.82it/s]TL stock 90:  50%|█████     | 5/10 [00:02<00:02,  1.86it/s]TL stock 90:  50%|█████     | 5/10 [00:03<00:03,  1.49it/s]
-TL stock 99:   0%|          | 0/10 [00:00<?, ?it/s]TL stock 99:  10%|█         | 1/10 [00:00<00:06,  1.29it/s]TL stock 99:  20%|██        | 2/10 [00:01<00:05,  1.59it/s]TL stock 99:  30%|███       | 3/10 [00:01<00:04,  1.75it/s]TL stock 99:  40%|████      | 4/10 [00:02<00:03,  1.84it/s]TL stock 99:  50%|█████     | 5/10 [00:02<00:02,  1.87it/s]TL stock 99:  60%|██████    | 6/10 [00:03<00:02,  1.92it/s]TL stock 99:  70%|███████   | 7/10 [00:03<00:01,  1.93it/s]TL stock 99:  70%|███████   | 7/10 [00:04<00:01,  1.62it/s]
-TL stock 108:   0%|          | 0/10 [00:00<?, ?it/s]TL stock 108:  10%|█         | 1/10 [00:00<00:07,  1.28it/s]TL stock 108:  20%|██        | 2/10 [00:01<00:04,  1.61it/s]TL stock 108:  30%|███       | 3/10 [00:01<00:03,  1.77it/s]TL stock 108:  40%|████      | 4/10 [00:02<00:03,  1.84it/s]TL stock 108:  40%|████      | 4/10 [00:02<00:04,  1.43it/s]
-TL stock 116:   0%|          | 0/10 [00:00<?, ?it/s]TL stock 116:  10%|█         | 1/10 [00:00<00:07,  1.27it/s]TL stock 116:  20%|██        | 2/10 [00:01<00:05,  1.60it/s]TL stock 116:  30%|███       | 3/10 [00:01<00:04,  1.75it/s]TL stock 116:  40%|████      | 4/10 [00:02<00:03,  1.84it/s]TL stock 116:  50%|█████     | 5/10 [00:02<00:02,  1.89it/s]TL stock 116:  50%|█████     | 5/10 [00:03<00:03,  1.51it/s]
-TL stock 126:   0%|          | 0/10 [00:00<?, ?it/s]TL stock 126:  10%|█         | 1/10 [00:00<00:07,  1.25it/s]TL stock 126:  20%|██        | 2/10 [00:01<00:05,  1.49it/s]TL stock 126:  30%|███       | 3/10 [00:01<00:04,  1.67it/s]TL stock 126:  40%|████      | 4/10 [00:02<00:03,  1.77it/s]TL stock 126:  50%|█████     | 5/10 [00:02<00:02,  1.85it/s]TL stock 126:  50%|█████     | 5/10 [00:03<00:03,  1.47it/s]
-Specific stock 90:   0%|          | 0/20 [00:00<?, ?it/s]Specific stock 90:   5%|▌         | 1/20 [00:01<00:28,  1.50s/it]Specific stock 90:  10%|█         | 2/20 [00:02<00:24,  1.34s/it]Specific stock 90:  15%|█▌        | 3/20 [00:03<00:21,  1.28s/it]Specific stock 90:  20%|██        | 4/20 [00:05<00:19,  1.25s/it]Specific stock 90:  25%|██▌       | 5/20 [00:06<00:18,  1.24s/it]Specific stock 90:  25%|██▌       | 5/20 [00:07<00:22,  1.52s/it]
-Specific stock 99:   0%|          | 0/20 [00:00<?, ?it/s]Specific stock 99:   5%|▌         | 1/20 [00:01<00:28,  1.50s/it]Specific stock 99:  10%|█         | 2/20 [00:02<00:24,  1.34s/it]Specific stock 99:  15%|█▌        | 3/20 [00:03<00:21,  1.29s/it]Specific stock 99:  20%|██        | 4/20 [00:05<00:20,  1.26s/it]Specific stock 99:  25%|██▌       | 5/20 [00:06<00:18,  1.25s/it]Specific stock 99:  30%|███       | 6/20 [00:07<00:17,  1.24s/it]Specific stock 99:  30%|███       | 6/20 [00:08<00:20,  1.47s/it]
-Specific stock 108:   0%|          | 0/20 [00:00<?, ?it/s]Specific stock 108:   5%|▌         | 1/20 [00:01<00:28,  1.50s/it]Specific stock 108:  10%|█         | 2/20 [00:02<00:24,  1.34s/it]Specific stock 108:  15%|█▌        | 3/20 [00:03<00:21,  1.28s/it]Specific stock 108:  20%|██        | 4/20 [00:05<00:20,  1.26s/it]Specific stock 108:  25%|██▌       | 5/20 [00:06<00:18,  1.25s/it]Specific stock 108:  30%|███       | 6/20 [00:07<00:17,  1.24s/it]Specific stock 108:  35%|███▌      | 7/20 [00:08<00:15,  1.23s/it]Specific stock 108:  40%|████      | 8/20 [00:10<00:14,  1.22s/it]Specific stock 108:  45%|████▌     | 9/20 [00:11<00:13,  1.22s/it]Specific stock 108:  50%|█████     | 10/20 [00:12<00:12,  1.22s/it]Specific stock 108:  55%|█████▌    | 11/20 [00:13<00:10,  1.22s/it]Specific stock 108:  60%|██████    | 12/20 [00:14<00:09,  1.22s/it]Specific stock 108:  65%|██████▌   | 13/20 [00:16<00:08,  1.22s/it]Specific stock 108:  70%|███████   | 14/20 [00:17<00:07,  1.21s/it]Specific stock 108:  75%|███████▌  | 15/20 [00:18<00:06,  1.22s/it]Specific stock 108:  80%|████████  | 16/20 [00:19<00:04,  1.22s/it]Specific stock 108:  80%|████████  | 16/20 [00:20<00:05,  1.31s/it]
-Specific stock 116:   0%|          | 0/20 [00:00<?, ?it/s]Specific stock 116:   5%|▌         | 1/20 [00:01<00:28,  1.51s/it]Specific stock 116:  10%|█         | 2/20 [00:02<00:24,  1.34s/it]Specific stock 116:  15%|█▌        | 3/20 [00:03<00:21,  1.28s/it]Specific stock 116:  20%|██        | 4/20 [00:05<00:20,  1.26s/it]Specific stock 116:  25%|██▌       | 5/20 [00:06<00:18,  1.24s/it]Specific stock 116:  30%|███       | 6/20 [00:07<00:17,  1.24s/it]Specific stock 116:  35%|███▌      | 7/20 [00:08<00:16,  1.23s/it]Specific stock 116:  40%|████      | 8/20 [00:10<00:14,  1.23s/it]Specific stock 116:  45%|████▌     | 9/20 [00:11<00:13,  1.23s/it]Specific stock 116:  50%|█████     | 10/20 [00:12<00:12,  1.25s/it]Specific stock 116:  55%|█████▌    | 11/20 [00:13<00:11,  1.24s/it]Specific stock 116:  60%|██████    | 12/20 [00:15<00:09,  1.24s/it]Specific stock 116:  65%|██████▌   | 13/20 [00:16<00:08,  1.23s/it]Specific stock 116:  70%|███████   | 14/20 [00:17<00:07,  1.23s/it]Specific stock 116:  75%|███████▌  | 15/20 [00:18<00:06,  1.23s/it]Specific stock 116:  80%|████████  | 16/20 [00:19<00:04,  1.23s/it]Specific stock 116:  85%|████████▌ | 17/20 [00:21<00:03,  1.22s/it]Specific stock 116:  90%|█████████ | 18/20 [00:22<00:02,  1.23s/it]Specific stock 116:  95%|█████████▌| 19/20 [00:23<00:01,  1.23s/it]Specific stock 116: 100%|██████████| 20/20 [00:24<00:00,  1.23s/it]Specific stock 116: 100%|██████████| 20/20 [00:24<00:00,  1.24s/it]
-Specific stock 126:   0%|          | 0/20 [00:00<?, ?it/s]Specific stock 126:   5%|▌         | 1/20 [00:01<00:28,  1.50s/it]Specific stock 126:  10%|█         | 2/20 [00:02<00:23,  1.33s/it]Specific stock 126:  15%|█▌        | 3/20 [00:03<00:21,  1.28s/it]Specific stock 126:  20%|██        | 4/20 [00:05<00:20,  1.25s/it]Specific stock 126:  25%|██▌       | 5/20 [00:06<00:18,  1.24s/it]Specific stock 126:  30%|███       | 6/20 [00:07<00:17,  1.22s/it]Specific stock 126:  35%|███▌      | 7/20 [00:08<00:15,  1.22s/it]Specific stock 126:  40%|████      | 8/20 [00:09<00:14,  1.21s/it]Specific stock 126:  45%|████▌     | 9/20 [00:11<00:13,  1.21s/it]Specific stock 126:  50%|█████     | 10/20 [00:12<00:12,  1.21s/it]Specific stock 126:  55%|█████▌    | 11/20 [00:13<00:10,  1.21s/it]Specific stock 126:  60%|██████    | 12/20 [00:14<00:09,  1.21s/it]Specific stock 126:  65%|██████▌   | 13/20 [00:15<00:08,  1.21s/it]Specific stock 126:  70%|███████   | 14/20 [00:17<00:07,  1.21s/it]Specific stock 126:  75%|███████▌  | 15/20 [00:18<00:06,  1.21s/it]Specific stock 126:  80%|████████  | 16/20 [00:19<00:04,  1.21s/it]Specific stock 126:  80%|████████  | 16/20 [00:20<00:05,  1.30s/it]
-Base training:   0%|          | 0/20 [00:00<?, ?it/s]Base training:   5%|▌         | 1/20 [00:48<15:18, 48.35s/it]Base training:  10%|█         | 2/20 [01:35<14:21, 47.85s/it]Base training:  15%|█▌        | 3/20 [02:23<13:31, 47.74s/it]Base training:  20%|██        | 4/20 [03:11<12:43, 47.70s/it]Base training:  25%|██▌       | 5/20 [03:58<11:53, 47.58s/it]Base training:  30%|███       | 6/20 [04:45<11:05, 47.56s/it]slurmstepd: error: *** JOB 40264526 ON v001 CANCELLED AT 2026-04-24T03:47:18 ***

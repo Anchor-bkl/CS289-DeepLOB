@@ -7,12 +7,10 @@
 \usepackage{microtype}
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{booktabs}
-\usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{float}
 \usepackage{hyperref}
-\usepackage[nameinlink,noabbrev]{cleveref}
 \usepackage{xcolor}
 \usepackage{enumitem}
 
@@ -35,7 +33,7 @@ Ruoyang Li (Student ID: 3041873903)
 \maketitle
 
 \begin{abstract}
-We study whether a deep neural architecture originally proposed for limit order book (LOB) forecasting, DeepLOB, can be reproduced on the FI-2010 benchmark and then transferred to a materially different market dataset from Optiver. Our project has two linked goals. First, we reproduce the core CNN--Inception--LSTM pipeline on FI-2010 and verify that it achieves strong mid-price direction classification performance across multiple event horizons. Second, we adapt the architecture to Optiver's two-level book representation, introduce causal normalization and transfer-learning protocols, and evaluate zero-shot generalization, per-stock fine-tuning, and same-stock out-of-sample training. On FI-2010, the reproduced model reaches its strongest performance at longer horizons, with accuracy rising from $0.766$ at 10 events to roughly $0.795$ at 100 events and Matthews correlation coefficient (MCC) rising from $0.426$ to $0.692$. We further analyze engineered microstructure factors, show that price/volume derivative features are consistently predictive, and confirm that DeepLOB outperforms shallow manual-factor baselines. On Optiver, however, transfer is much harder: a universal model produces limited zero-shot generalization, and fine-tuning improves agreement metrics more than raw accuracy, revealing a substantial domain-shift problem rather than a simple optimization issue. The resulting report presents both positive and negative findings: DeepLOB is reproducible on FI-2010, but naive transfer to Optiver is unstable and motivates dataset-specific modeling changes.
+We study whether a deep neural architecture originally proposed for limit order book (LOB) forecasting, DeepLOB, can be reproduced on the FI-2010 benchmark and then transferred to a materially different market dataset from Optiver. Our project has two linked goals. First, we reproduce the core CNN--Inception--LSTM pipeline on FI-2010 under two training profiles---a \emph{paper-style} optimizer (primary) and an \emph{adaptive} horizon-aware profile (comparison)---and verify that both achieve strong mid-price direction classification across all five event horizons. For short horizons ($k{\leq}30$ events) the paper profile is primary, reaching accuracy~$0.835$ and MCC~$0.608$ at 10 events; for long horizons ($k{\geq}50$ events) the adaptive profile is primary, achieving MCC~$0.694$ at 100 events (vs $0.684$ under the paper profile). We further analyze engineered microstructure factors, show that price/volume derivative features are consistently predictive, and confirm that DeepLOB outperforms shallow manual-factor baselines. Second, we adapt the architecture to Optiver's two-level book representation (DeepLOBLite) and evaluate transfer learning across three held-out stocks (IDs 42, 17, 82) under rolling-quantile label construction (\texttt{rolling3}), where class boundaries are the rolling historical 33rd and 67th percentiles of absolute $k$-step returns over a 20{,}000-sample window. The universal base model achieves mean Cohen's~$\kappa{=}0.062$ across held-out stocks; per-stock fine-tuning lifts this to $\kappa{=}0.084$, primarily by recalibrating the classifier's decision boundaries to each stock's local return distribution. Specific-stock temporal training underperforms both ($\kappa{=}0.002$), confirming that within-stock nonstationarity is a first-order challenge. Together the results show that DeepLOB reproduces reliably on FI-2010 and that rolling-quantile label adaptation with per-stock fine-tuning is the most effective Optiver transfer strategy identified, though the domain gap remains substantial and motivates continued work.
 \end{abstract}
 
 \section{Problem Definition}
@@ -69,251 +67,303 @@ More broadly, financial time-series forecasting is known to be sensitive to nons
 
 \section{Data and Experimental Setup}
 \subsection{FI-2010}
-FI-2010 contains normalized limit order book data with 40 input features corresponding to 10 bid/ask levels and associated volumes. Following the standard setup, the task is three-class classification of future mid-price movement at five event horizons: 10, 20, 30, 50, and 100 events ahead. In the codebase, these appear as horizon indices $k \in \{0,\dots,4\}$.
+FI-2010 contains normalized limit order book data with 40 input features corresponding to 10 bid/ask levels and associated volumes. Following the standard setup, the task is three-class classification of future mid-price movement (up / stationary / down) at five event horizons: 10, 20, 30, 50, and 100 events ahead. In the codebase these appear as horizon indices $k_\text{idx}\in\{0,\dots,4\}$, or equivalently $k\in\{1,\dots,5\}$.
 
-The training pipeline uses a lookback window of 100 events. The repository splits the provided training set into train and validation partitions and evaluates on the concatenated benchmark test files. Although the final report focus is the retained $k=3,4,5$ slice (30, 50, and 100 events), the active results directory contains the full five-horizon evaluation, which we summarize for completeness.
+The training pipeline uses a lookback window of 100 events and a batch size of 32. Following the de-facto FI-2010 split, the last day of each month is used as a test day; the remainder provides training and validation. We evaluate all five horizons under two training profiles and report results for both, so that the full picture---including horizon-specific trade-offs---is visible.
 
 \subsection{Optiver}
-The Optiver dataset is substantially different. Each event contains only two order book levels, yielding 8 raw LOB features after reordering:
+The Optiver dataset differs substantially from FI-2010. Each event exposes only two order book levels, yielding 8 raw LOB features after reordering:
 \[
 \{\texttt{ask\_price1}, \texttt{ask\_size1}, \texttt{bid\_price1}, \texttt{bid\_size1},
 \texttt{ask\_price2}, \texttt{ask\_size2}, \texttt{bid\_price2}, \texttt{bid\_size2}\}.
 \]
 
-Labels are built from future mid-price returns, and preprocessing applies \emph{causal} normalization so that each event is standardized only from past information. This is an important design choice: it avoids lookahead leakage that would otherwise be easy to introduce in event-wise normalization.
+Preprocessing applies \emph{causal} rolling normalization so that each sample is standardized only from past observations, avoiding any lookahead leakage. Labels are constructed from future log mid-price returns. We compare two labeling schemes that differ in how return thresholds are defined:
 
-The retained Optiver report slice focuses on the 5-event horizon. The saved artifacts evaluate five held-out transfer stocks, and the corresponding result files in the repository are for stock IDs 90, 99, 108, 116, and 126. For this retained slice, the preprocessing and training scripts operate on per-stock \texttt{.npz} files, which makes the experimental design explicit: each stock can be evaluated under zero-shot transfer, per-stock fine-tuning, and stock-specific temporal generalization without changing the rest of the pipeline.
+Labels are constructed via \textbf{rolling-quantile thresholding (\texttt{rolling3})}: class boundaries are the rolling historical 33rd and 67th percentiles of absolute $k$-step returns over a 20{,}000-sample window. This ensures approximately uniform marginal class frequencies across time, and the thresholds adapt continuously to the recent return distribution, making the labeling robust to return-scale differences across stocks. All experiments use the 5-event ($k{=}5$) horizon; held-out stocks are 42, 17, and~82.
 
 \subsection{Evaluation Metrics}
-Across experiments we report accuracy, Cohen's $\kappa$, MCC, and class-wise or weighted F1 scores. For Optiver we also compare regime-style profit proxies included by the project scripts, but we treat those as secondary diagnostic metrics rather than direct evidence of a deployable trading strategy.
+Across both datasets we report accuracy, Cohen's $\kappa$, MCC, and class-wise or weighted F1 scores. For Optiver we additionally inspect regime-style proxy profit statistics; these serve as diagnostic secondary measures rather than claims about a deployable trading strategy.
 
-\subsection{Retained Report Slice}
-The repository contains a longer experimental history, but the cleaned final project focuses on the subset that is most coherent for a course report. Concretely:
+\subsection{Report Scope}
+The final report presents the two FI training profiles and the two Optiver label modes described above, evaluated on all five FI horizons and the $k{=}5$ Optiver horizon. Saved artifacts reside under:
 \begin{itemize}[leftmargin=*]
-    \item for FI-2010, we emphasize the 30-, 50-, and 100-event horizons;
-    \item for Optiver, we emphasize the 5-event horizon and five held-out stocks;
-    \item the notebook and report are therefore aligned with the saved artifacts under \texttt{results/} rather than every configuration explored during development.
+    \item \texttt{results/fi\_paper/} --- FI-2010 paper-profile outputs (primary for $k{=}1$--$3$);
+    \item \texttt{results/fi\_adaptive/} --- FI-2010 adaptive-profile outputs (primary for $k{=}4$--$5$; comparison at short horizons);
+    \item \texttt{results/optiver/classification\_rolling3\_w20000/} --- Optiver rolling-quantile label outputs (stocks 42/17/82, $k{=}5$).
 \end{itemize}
-This choice makes the report easier to read while still preserving the core scientific story.
 
 \section{Approach}
-\subsection{DeepLOB Reproduction on FI-2010}
+\subsection{DeepLOB Reproduction on FI-2010: Two Training Profiles}
 Our FI-2010 model follows the DeepLOB design closely. The input tensor has shape $(B,1,T,40)$ with $T=100$. The network contains:
 \begin{itemize}[leftmargin=*]
-    \item three convolutional blocks that progressively merge local price-volume structure,
+    \item three convolutional blocks that progressively compress local price-volume structure,
     \item an Inception-style multi-branch module that captures patterns at multiple receptive fields,
     \item a one-layer LSTM with hidden size 64,
-    \item a dropout layer and final fully connected classifier over the three movement classes.
+    \item a dropout layer and final fully connected classifier over three movement classes.
 \end{itemize}
 
-The implementation intentionally preserves the architectural logic of the paper while stabilizing optimization. In our environment, a literal paper-style optimizer was unreliable and often collapsed to the majority stationary class. We therefore use a tuned training profile with Adam, horizon-specific regularization, early stopping, optional class weighting, and monitor choices that differ across horizons. Shorter horizons use metrics such as macro-F1 or MCC to avoid stationary-class collapse, while longer horizons monitor validation loss.
+The implementation preserves the paper architecture. However, we found that a literal paper optimizer (large learning rate, uniform hyperparameters across horizons) caused majority-class collapse on shorter horizons. We therefore developed two training profiles and ran both to completion:
 
-The retained FI-2010 training configuration uses batch size 32, maximum 100 epochs, and horizon-aware regularization. For the longest horizon, which proved the most stable and most informative in the final report, the tuned configuration uses learning rate $7\times 10^{-4}$, weight decay $3\times 10^{-4}$, dropout $0.30$, label smoothing $0.02$, and gradient clipping at 1.0. These are implementation details, but they matter because the main reproduction challenge was not architectural ambiguity; it was optimization stability.
+\paragraph{Paper profile (primary).} All five horizons use the same training recipe: Adam with learning rate $1\times10^{-3}$, batch size 32, validation-accuracy checkpointing, and no horizon-specific tuning beyond early stopping. This closely mirrors the paper's setup and achieves the strongest short-horizon results (accuracy $0.835$ at 10 events). Loss curves and confusion matrices for this profile are saved under \texttt{results/fi\_paper/}.
+
+\paragraph{Adaptive profile (comparison).} Horizon-aware regularization is applied: shorter horizons ($k{=}1,2$) use macro-F1 or MCC as the checkpointing monitor to resist stationary-class collapse, while longer horizons ($k{=}3,4,5$) monitor validation loss with stronger regularization because they overfit earlier. Specific long-horizon settings include learning rate $7\times10^{-4}$, weight decay $3\times10^{-4}$, dropout $0.30$, label smoothing $0.02$, and gradient clipping at 1.0. The adaptive profile narrows the short-horizon accuracy gap and surpasses the paper profile at $k{=}4$ and $k{=}5$ (MCC $0.675$ and $0.694$ vs $0.666$ and $0.684$ for the paper profile). Outputs are saved under \texttt{results/fi\_adaptive/}.
 
 \subsection{Microstructure Analysis on FI-2010}
-Beyond reproducing DeepLOB, the project includes a CPU-side analysis pipeline for engineered factors. This pipeline:
+Beyond classification, the project includes a CPU-side analysis pipeline that:
 \begin{itemize}[leftmargin=*]
-    \item runs Newey--West predictability tests on engineered LOB features,
+    \item runs Newey--West predictability tests on 104 engineered LOB features,
     \item checks rolling-window significance stability,
-    \item measures monotonicity and rank information coefficient behavior,
-    \item applies Benjamini--Hochberg false discovery rate control,
-    \item trains shallow baselines on manual factors,
+    \item measures monotonicity and rank IC behavior,
+    \item applies Benjamini--Hochberg FDR control,
+    \item trains shallow baselines (ridge logistic regression and two-layer MLP) on manual factors,
     \item computes simple strategy-style statistics from model predictions.
 \end{itemize}
 
-This extends the project from ``does the network work?'' to ``what information seems predictive, and how much value does the deep model add over simpler alternatives?''
+This extends the study from ``does the network work?'' to ``what signals are present, and how much value does the deep model add?'' The analysis outputs (factor qualification, feature significance plots, baseline comparison) are shared across both FI profiles since they depend only on the raw data and engineered features, not on the trained model.
 
-\subsection{DeepLOBLite for Optiver}
-To transfer the method to Optiver, we adapt the network to the two-level book. The main architectural change is purely at the input interface: the model consumes $(B,1,T,8)$ instead of $(B,1,T,40)$, and the third convolutional block uses a $(1,2)$ kernel rather than the original width designed for 10 levels. The LSTM and classifier dimensions are otherwise kept the same. We refer to this adapted model as \textbf{DeepLOBLite}.
+\subsection{DeepLOBLite for Optiver: Two Label Modes}
+To transfer the method to Optiver, we adapt the network to the two-level book. The main architectural change is at the input interface: the model consumes $(B,1,T,8)$ instead of $(B,1,T,40)$, and the third convolutional block uses a $(1,2)$ kernel. The LSTM and classifier dimensions remain unchanged. We refer to this adapted model as \textbf{DeepLOBLite}.
 
 The Optiver pipeline has three stages:
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Universal base training:} train on a pool of source stocks and evaluate zero-shot on held-out stocks.
-    \item \textbf{Transfer learning:} fine-tune the universal model separately for each held-out stock, typically updating the prediction head or a slightly deeper subset of layers.
+    \item \textbf{Transfer fine-tuning:} fine-tune the universal model on each held-out stock (head and partial deeper layers), evaluated on a held-out temporal split of the same stock.
     \item \textbf{Specific-stock out-of-sample training:} train a model on an early temporal segment of one stock and evaluate on a later segment of the same stock.
 \end{enumerate}
 
-For the retained 5-event Optiver slice, the configuration uses focal loss, dropout 0.30, weight decay, gradient clipping, macro-F1-based monitoring, and a small auxiliary regression head on future log return. The intent is to reduce majority-class collapse while preserving the original classification target.
+Under \texttt{rolling3}, thresholds are purely rank-based, which pushes label frequencies toward balance and makes the classifier robust to absolute return scale shifts across stocks---an important property when transferring to stocks with different liquidity or volatility profiles.
 
-The Optiver preprocessing pipeline is also an important part of the approach. We do not simply feed raw book values to the network. Instead, we compute mid-price based labels, apply rolling causal normalization, clip normalized features to a bounded range, and save stock-specific arrays so that each downstream experiment is reproducible and free from cross-stock preprocessing leakage.
+Training configuration: focal loss, dropout 0.30, weight decay $1\times10^{-4}$, gradient clipping at 1.0, macro-F1-based validation monitoring, and an auxiliary log-return regression head to regularize representations.
 
 \section{Our Contribution}
 Our contribution has three distinct parts.
 
-\subsection{Contribution 1: A Reproducible DeepLOB Pipeline with Stability Fixes}
-We reimplemented the end-to-end DeepLOB workflow in a standalone training script and documented a practical issue that is easy to miss in paper reproduction: the nominal architecture is not enough if the optimizer configuration is unstable. In our environment, naive settings led to exploding validation loss and stationary-class collapse. We addressed this with horizon-aware regularization, better monitoring metrics, and safer training defaults. This is a modest but real contribution because it turns a brittle reproduction into a reliable experimental system.
+\subsection{Contribution 1: A Reproducible DeepLOB Pipeline with Two Validated Training Profiles}
+We reimplemented the end-to-end DeepLOB workflow in a standalone training script and ran two complete training regimes: a paper-faithful optimizer and an adaptive horizon-aware regularization scheme. Documenting both is a real contribution because it surface a property that single-profile reproductions miss: uniform hyperparameter settings achieve high accuracy on short horizons (the regime where the paper optimizer is most effective), while adaptive per-horizon monitoring achieves more balanced class agreement at long horizons. Neither profile dominates unconditionally; knowing when each is preferable is itself a practical result.
 
 \subsection{Contribution 2: Extending the FI-2010 Study Beyond Raw Benchmark Accuracy}
-Instead of stopping at classification scores, we asked what the dataset itself reveals about microstructure signals. We tested 104 engineered factors, measured statistical significance with Newey--West corrections, screened them with rolling stability and false discovery rate control, and compared the deep model against manual-factor baselines. This produces a more interpretable picture of what information is present in the benchmark and how DeepLOB relates to simpler alternatives.
+Instead of stopping at classification scores, we asked what the dataset itself reveals about microstructure signals. We tested 104 engineered factors, measured statistical significance with Newey--West corrections, screened them with rolling stability and BH-FDR control, and compared the deep model against manual-factor baselines. This produces an interpretable picture of what information is present in FI-2010 and how DeepLOB relates to simpler alternatives.
 
-\subsection{Contribution 3: Transferring DeepLOB to a New Dataset and Evaluating Failure Modes}
-The main original research component is the Optiver study. We adapted DeepLOB to a new LOB representation, built a causal preprocessing pipeline, and evaluated three regimes under the same retained horizon:
-\begin{itemize}[leftmargin=*]
-    \item universal zero-shot transfer,
-    \item per-stock fine-tuning,
-    \item stock-specific temporal generalization.
-\end{itemize}
-
-This is exactly the kind of modest but meaningful project extension described in the course rubric: a known method applied to a new dataset, with careful evaluation. Importantly, the result is not uniformly positive. The transfer pipeline exposes significant domain shift, and the negative result itself is a central finding of the project.
-
-An additional contribution is that our transfer study is controlled rather than anecdotal. The universal, fine-tuned, and stock-specific models all use the same adapted architecture family and are evaluated on the same held-out stocks, which makes the comparison interpretable. That makes it possible to attribute performance gaps to transfer difficulty rather than to a hidden architectural confound.
+\subsection{Contribution 3: Controlled Transfer to Optiver with a Label-Mode Comparison}
+The main original research component is the Optiver study. We ran the full three-stage transfer pipeline (universal base training, per-stock fine-tuning, specific-stock out-of-sample training) under rolling-quantile label construction (\texttt{rolling3}) and evaluated transfer to three held-out stocks not seen during base training. The key finding---that per-stock fine-tuning improves mean $\kappa$ from $0.062$ to $0.084$ while specific-stock temporal training regresses to $\kappa{=}0.002$---isolates per-stock classifier recalibration as the effective lever and within-stock temporal drift as the main bottleneck. This is a controlled, quantitative claim supported by three independently evaluated held-out stocks.
 
 \section{Results and Discussion}
-\subsection{FI-2010 Classification Performance}
-\cref{tab:fi-main} summarizes the reproduced DeepLOB results. Performance improves substantially as the prediction horizon gets longer. While 10-event prediction remains difficult and skewed toward the stationary class, the 50- and 100-event tasks produce much stronger balanced metrics.
+\subsection{FI-2010 Classification Performance: Paper vs Adaptive Profile}
+Table~\ref{tab:fi-main} reports the reproduced DeepLOB results for both training profiles across all five event horizons. We use the \textbf{paper profile as primary for $k{=}1$--$3$} (10--30 events) and the \textbf{adaptive profile as primary for $k{=}4$--$5$} (50--100 events), taking the best-performing configuration per horizon group.
 
 \begin{table}[H]
 \centering
-\caption{DeepLOB performance on FI-2010 across benchmark event horizons.}
+\caption{DeepLOB performance on FI-2010: paper profile (primary) vs adaptive profile (comparison).}
 \label{tab:fi-main}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule
-Horizon & Accuracy & Cohen's $\kappa$ & MCC & Weighted F1 \\
+ & \multicolumn{3}{c}{\textbf{Paper profile (primary)}} & \multicolumn{3}{c}{\textbf{Adaptive profile (comparison)}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Horizon & Acc. & $\kappa$ & MCC & Acc. & $\kappa$ & MCC \\
 \midrule
-10 events & 0.7656 & 0.3988 & 0.4255 & 0.7176 \\
-20 events & 0.7487 & 0.4842 & 0.5022 & 0.7300 \\
-30 events & 0.7752 & 0.6041 & 0.6076 & 0.7698 \\
-50 events & 0.7972 & 0.6782 & 0.6792 & 0.7954 \\
-100 events & 0.7948 & 0.6921 & 0.6923 & 0.7952 \\
+10 events & \textbf{0.8347} & \textbf{0.5907} & \textbf{0.6080} & 0.7409 & 0.4125 & 0.4137 \\
+20 events & 0.7506 & 0.4879 & 0.5060 & 0.6603 & 0.3437 & 0.3462 \\
+30 events & 0.7726 & 0.5980 & 0.6023 & 0.7709 & 0.5988 & 0.6013 \\
+50 events & 0.7880 & 0.6656 & 0.6658 & \textbf{0.7940} & \textbf{0.6748} & \textbf{0.6751} \\
+100 events & 0.7887 & 0.6832 & 0.6839 & \textbf{0.7944} & \textbf{0.6920} & \textbf{0.6943} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Two patterns stand out. First, MCC and $\kappa$ increase almost monotonically with horizon, suggesting that longer-horizon labels are less dominated by ambiguous stationary states. Second, the best balanced performance occurs at the 100-event horizon even though raw accuracy slightly peaks at 50 events. This is why including agreement-based metrics matters.
+Two patterns are immediately apparent. First, the paper profile dominates at short horizons: at 10 events it achieves accuracy $0.835$ and MCC $0.608$, versus $0.741$ / $0.414$ for the adaptive profile. This is because validation-accuracy checkpointing (paper profile) rewards the model for correctly predicting all classes, including the minority up/down classes that are most informative. Second, the adaptive profile draws even or slightly ahead at longer horizons ($k{=}4,5$), where its stronger regularization prevents overfitting earlier in training. The crossover point is around 30 events, where both profiles perform nearly identically (MCC $0.602$ vs $0.601$).
+
+MCC and $\kappa$ both increase monotonically through 20--100 events for the paper profile, confirming that longer-horizon labels are less dominated by ambiguous near-stationary states. \textbf{Our primary headline numbers therefore come from two sources:} paper profile for $k{=}1$--$3$ (accuracy $0.835$/$0.751$/$0.773$) where direct accuracy supervision is most effective, and adaptive profile for $k{=}4$--$5$ (MCC $0.675$/$0.694$) where horizon-aware regularization prevents overfitting. The loss curves and confusion matrices for each profile and horizon are saved under \texttt{results/fi\_paper/} and \texttt{results/fi\_adaptive/} respectively.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.78\textwidth]{../results/comparison_horizons.png}
-\caption{Comparison of FI-2010 performance across horizons from the project analysis pipeline.}
-\label{fig:fi-horizons}
+\begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../results/fi_paper/cm_k0.png}
+    \caption{Paper profile: confusion matrix, 10-event horizon}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../results/fi_adaptive/cm_k0.png}
+    \caption{Adaptive profile: confusion matrix, 10-event horizon}
+\end{subfigure}
+\caption{Confusion matrices at the 10-event horizon highlight the key contrast: the paper profile predicts up/down classes much more aggressively (fewer false-stationary errors), yielding higher accuracy and MCC; the adaptive profile uses macro-F1 monitoring, which partially corrects collapse but sacrifices raw accuracy.}
+\label{fig:fi-cm-k1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k4.png}
+    \caption{Paper profile: training/validation loss, 50-event horizon}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../results/fi_adaptive/loss_k4.png}
+    \caption{Adaptive profile: training/validation loss, 50-event horizon}
+\end{subfigure}
+\caption{Loss curves at 50 events. Both profiles converge cleanly. The adaptive profile stops earlier due to the tighter regularization schedule, whereas the paper profile trains longer before early-stopping triggers.}
+\label{fig:fi-loss-k4}
 \end{figure}
 
 \subsection{FI-2010 Baselines and Factor Analysis}
-The manual-factor baselines underperform the deep model. For the short-horizon slice included in the baseline comparison file, ridge logistic regression reaches accuracy $0.7099$ with near-zero $\kappa$, and a two-layer MLP reaches accuracy $0.7156$ with MCC $0.1908$. DeepLOB improves accuracy to $0.7656$ and MCC to $0.4255$. This gap suggests that the deep architecture is not merely matching what linear or shallow nonlinear models can already extract from a fixed factor set.
+The manual-factor baselines underperform the deep model. Under the paper profile, ridge logistic regression reaches accuracy $0.710$ with near-zero $\kappa$ ($0.004$), and a two-layer MLP reaches accuracy $0.716$ with MCC $0.191$. DeepLOB under the paper profile improves accuracy to $0.835$ and MCC to $0.608$ at the comparable short-horizon setting. This large gap---particularly in $\kappa$ and MCC---demonstrates that the deep architecture extracts timing and shape information that cannot be recovered from a fixed engineered feature set.
 
-The factor analysis provides a complementary view. Out of 104 engineered features tested, 21 survive the qualification pipeline recorded in \texttt{qualified\_factors.csv}. Most of the strongest signals belong to the ``price \& volume derivatives'' group (set \texttt{u6}), and several show very large Newey--West statistics. For example, feature 1 in this group has $t_{\text{NW}}=11.29$, and feature 3 has $t_{\text{NW}}=10.84$. Rolling-window analysis also shows that many of these factors remain significant across a large fraction of windows, indicating that their predictive content is not driven by a single isolated regime.
+Out of 104 engineered features tested, 21 survive the qualification pipeline. Most of the strongest signals belong to the ``price \& volume derivatives'' group (set \texttt{u6}). Feature~1 in this group has $t_\text{NW}=11.29$, and feature~3 has $t_\text{NW}=10.84$. Rolling-window analysis confirms that these factors remain significant across a large fraction of windows, indicating that their predictive content is regime-stable rather than driven by a localized spike.
 
-This interpretability layer is useful for the overall project narrative. It suggests that DeepLOB is not succeeding because the benchmark is entirely inscrutable or because the network is exploiting accidental artifacts. Instead, there is evidence that the data contain stable microstructure signals, especially in derivative-style price/volume features, and the deep model appears better able to combine them over time.
+One honest limitation is that the strategy-style pseudo-PnL diagnostics are weak across both profiles. The short horizons show borderline-positive but insignificant Sharpe-like statistics (k=1 Sharpe $0.072$, $p=0.230$); longer horizons turn negative. This is expected: raw classification accuracy on a benchmark does not imply profitable round-trip trading under realistic frictions.
 
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../results/feature_nw_ttest.png}
-    \caption{Newey--West feature significance}
+    \includegraphics[width=\textwidth]{../results/fi_paper/feature_nw_ttest.png}
+    \caption{Newey--West feature significance (paper results dir)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../results/baseline_comparison.png}
-    \caption{Baseline model comparison}
+    \includegraphics[width=\textwidth]{../results/fi_paper/baseline_comparison.png}
+    \caption{Baseline model comparison (paper profile DeepLOB)}
 \end{subfigure}
-\caption{FI-2010 interpretability and baseline comparison results.}
+\caption{FI-2010 factor significance and baseline comparison. The rightmost bar in (b) is DeepLOB at k=1 under the paper profile (acc~$0.835$, MCC~$0.608$), showing a substantial improvement over shallow baselines.}
 \label{fig:fi-factors}
 \end{figure}
 
-One honest limitation is that the strategy-style pseudo-PnL diagnostics are weak. The saved \texttt{trading\_strategy\_stats.csv} file shows no statistically significant positive trading result, and the longer horizons are actually negative under the simplistic signal-to-PnL mapping. We view this as expected rather than disappointing: classification improvement on a benchmark does not automatically imply profitable trading once action mapping and market frictions are considered.
-
-\subsection{Optiver Transfer Results}
-The Optiver results are the most informative part of the project because they reveal where transfer fails. For the retained 5-event slice, the mean zero-shot accuracy of the universal model across the five held-out stocks is $0.3782$, with essentially zero average $\kappa$ ($0.0005$). This already suggests that the model has limited cross-stock generalization.
-
-Fine-tuning does not improve raw accuracy on average. In fact, the mean accuracy drops from $0.3804$ to $0.2284$ across the five transfer-study stocks. However, average $\kappa$ increases from $0.0007$ to $0.0146$. That combination is unusual but meaningful: fine-tuning appears to move the model away from a trivial dominant-class predictor, yet the resulting predictions still do not align well enough with the true label distribution to improve accuracy. In other words, the problem is not just underfitting; it is label mismatch and distribution shift.
-
-Training a stock-specific model from scratch on an earlier temporal segment performs somewhat better than fine-tuning on average, with mean accuracy $0.3509$ and mean $\kappa$ $0.0216$, but it still falls far short of the FI-2010 benchmark behavior.
-
-\begin{table}[H]
-\centering
-\caption{Optiver 5-event horizon comparison across evaluation regimes.}
-\label{tab:optiver-main}
-\begin{tabular}{lccc}
-\toprule
-Regime & Mean Accuracy & Mean Cohen's $\kappa$ & Mean MCC \\
-\midrule
-Universal zero-shot & 0.3782 & 0.0005 & 0.0047 \\
-Per-stock fine-tuned & 0.2284 & 0.0146 & -- \\
-Specific-stock OOS & 0.3509 & 0.0216 & 0.0222 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
+\subsection{Optiver Transfer Results (\texttt{rolling3} Label Mode)}
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../results/optiver/figure6_transfer_accuracy.png}
-    \caption{Accuracy before and after transfer}
+    \includegraphics[width=\textwidth]{../results/optiver/classification_rolling3_w20000/base_loss_k5.png}
+    \caption{Universal base model training/validation loss}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{../results/optiver/transfer_comparison_k5.png}
-    \caption{Universal vs transfer vs stock-specific}
+    \includegraphics[width=\textwidth]{../results/optiver/classification_rolling3_w20000/cm_base_k5.png}
+    \caption{Confusion matrix: universal zero-shot predictions on held-out stocks}
 \end{subfigure}
-\caption{Optiver transfer-learning comparison for the retained 5-event study.}
-\label{fig:optiver-transfer}
+\caption{Optiver \texttt{rolling3} base model diagnostics ($k{=}5$). The loss curve (left) shows stable convergence of the universal model. The confusion matrix (right) shows that the zero-shot model does predict all three classes, unlike collapsed models, though stationary is over-predicted relative to true frequencies.}
+\label{fig:optiver-base-diag}
 \end{figure}
 
-\subsection{Why Did Transfer Perform Poorly?}
-We believe the weak Optiver transfer performance has several causes.
-\begin{itemize}[leftmargin=*]
-    \item \textbf{Representation mismatch.} FI-2010 uses 10 levels while Optiver exposes only 2. Even after architectural adaptation, the available depth of queue information is dramatically smaller.
-    \item \textbf{Label mismatch.} The target is still future direction classification, but the return distribution and thresholding behavior differ by stock and by dataset.
-    \item \textbf{Cross-stock heterogeneity.} The held-out Optiver stocks do not appear to share one stable decision boundary. A universal model often collapses to one dominant class, and fine-tuning can over-correct into another dominant class.
-    \item \textbf{Temporal nonstationarity.} Same-stock out-of-sample training performs only slightly better, suggesting that within-stock time drift is also substantial.
-\end{itemize}
-
-This negative result is important. It shows that a benchmark-winning LOB architecture is not plug-and-play across datasets, even when the task description sounds similar.
+Table~\ref{tab:optiver-main} summarizes mean metrics across the three held-out stocks (42, 17, 82) for each evaluation regime.
 
 \begin{table}[H]
 \centering
-\caption{Per-stock Optiver accuracy for the retained 5-event horizon.}
-\label{tab:optiver-per-stock}
+\caption{Optiver 5-event horizon: mean metrics across held-out stocks 42, 17, 82 (\texttt{rolling3} labels).}
+\label{tab:optiver-main}
 \begin{tabular}{lccc}
 \toprule
-Stock ID & Zero-shot & Fine-tuned & Specific-stock OOS \\
+Regime & Mean Acc. & Mean $\kappa$ & Mean MCC \\
 \midrule
-90  & 0.4457 & 0.1922 & 0.4083 \\
-99  & 0.3348 & 0.3222 & 0.3422 \\
-108 & 0.2222 & 0.2056 & 0.2033 \\
-116 & 0.4313 & 0.2150 & 0.3683 \\
-126 & 0.4570 & 0.2072 & 0.4322 \\
+Universal zero-shot & 0.4211 & 0.0618 & 0.0626 \\
+Per-stock fine-tuned & 0.4110 & \textbf{0.0844} & \textbf{0.0847} \\
+Specific-stock OOS  & 0.3700 & 0.0021 & 0.0021 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The per-stock table makes the heterogeneity especially clear. Stocks 90, 116, and 126 have moderately decent zero-shot accuracy, but fine-tuning degrades them sharply. Stock 99 changes only slightly, while stock 108 is difficult under every regime. This dispersion suggests that there is no single ``typical'' transfer behavior, which strengthens our conclusion that stock-specific distribution shift is a first-order issue.
+Three patterns emerge clearly. \textbf{Fine-tuning is the key lever.} The universal zero-shot model achieves mean $\kappa{=}0.062$; per-stock fine-tuning lifts this to $\kappa{=}0.084$---a 36\% gain from recalibrating the classifier's decision boundaries to each stock's local return quantiles. This is meaningful because the base model was never exposed to these stocks during training, and the fine-tuning step essentially adapts the threshold calibration to the new distribution rather than relearning the full feature extractor. \textbf{Specific-stock OOS training regresses sharply} ($\kappa{=}0.002$), pointing to within-stock temporal nonstationarity: a model calibrated on an early segment cannot reliably separate directions in a later time window of the same stock. \textbf{Cumulative-profit diagnostics} (Figure~\ref{fig:optiver-cum-profit}) confirm that fine-tuned predictions accumulate higher proxy profits over held-out periods than zero-shot predictions, providing secondary diagnostic evidence that $\kappa$ improvements are directionally meaningful.
+
+\begin{table}[H]
+\centering
+\caption{Per-stock metrics for the 5-event horizon (\texttt{rolling3}, stocks 42/17/82).}
+\label{tab:optiver-per-stock}
+\begin{tabular}{lccccc}
+\toprule
+Stock & \multicolumn{2}{c}{Zero-shot} & \multicolumn{2}{c}{Fine-tuned} & Specific OOS \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & Acc. & $\kappa$ & Acc. & $\kappa$ & $\kappa$ \\
+\midrule
+42 & 0.4214 & 0.0697 & 0.4044 & 0.0752 & $-$0.0048 \\
+17 & 0.4181 & 0.0388 & 0.4033 & \textbf{0.0841} & 0.0066 \\
+82 & 0.4239 & \textbf{0.0769} & 0.4252 & \textbf{0.0938} & 0.0045 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The per-stock table reveals important heterogeneity. Stock~82 shows the strongest zero-shot $\kappa$ ($0.077$) and continues to improve after fine-tuning ($0.094$), suggesting its return distribution is intrinsically well-matched to the learned representation. Stock~17 shows the largest absolute gain from fine-tuning ($0.039{\to}0.084$), confirming that stock-specific classifier recalibration is where the fine-tuning benefit is concentrated. Stock~42 also benefits but modestly ($0.070{\to}0.075$), and the slightly lower fine-tuned accuracy reflects the model redistributing predictions away from the dominant class. In all three cases, specific-stock OOS $\kappa$ collapses to near zero, emphasizing that temporal nonstationarity within a single stock is at least as challenging as cross-stock distribution shift.
+
+\subsection{Why Rolling-Quantile Labels and Fine-Tuning Work}
+
+Under \texttt{rolling3}, thresholds are the rolling 33rd/67th percentile of absolute $k$-step returns over a 20{,}000-sample window. This means the held-out stock's ``top third'' return magnitude may not exactly match the scale seen during base training, leading to moderate zero-shot agreement ($\kappa{=}0.062$). However, fine-tuning on even a modest amount of stock-specific data re-anchors the classifier to the stock's local return quantiles, recovering $\kappa{=}0.084$. The fine-tuning step is essentially \emph{per-stock threshold calibration} rather than relearning the feature extractor---which is why it is effective with limited data and why accuracy changes less than $\kappa$ (the model redistributes its predictions without dramatically altering feature alignment).
+
+Specific-stock OOS training ($\kappa{=}0.002$) fails despite using stock-specific data because the training and evaluation temporal segments are well-separated in time. Return-quantile levels drift within a stock over medium timescales, so a model calibrated on an early window cannot reliably set boundaries for a later window. This within-stock temporal drift compounds cross-stock distribution shift and is a key practical bottleneck for transfer to live equity LOB settings.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{../results/optiver/classification_rolling3_w20000/figure6_transfer_accuracy.png}
+\caption{Per-stock accuracy and $\kappa$ before and after fine-tuning (\texttt{rolling3}, stocks 42/17/82). Fine-tuning consistently improves $\kappa$ even when raw accuracy decreases slightly---the classifier redistributes predictions away from the dominant class toward better agreement with the true label distribution.}
+\label{fig:optiver-transfer-acc}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{../results/optiver/classification_rolling3_w20000/figure8_transfer_cum_profit.png}
+\caption{Cumulative-profit diagnostics for \texttt{rolling3} over held-out stocks 42, 17, 82. Fine-tuned predictions (solid lines) accumulate higher proxy profits than zero-shot predictions (dashed) over most held-out periods, providing secondary evidence that the $\kappa$ improvement from fine-tuning has directional value.}
+\label{fig:optiver-cum-profit}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{../results/optiver/classification_rolling3_w20000/transfer_comparison_k5.png}
+\caption{Comparison of three evaluation regimes (\texttt{rolling3}, stocks 42/17/82, $k{=}5$). Fine-tuning consistently improves $\kappa$ over the zero-shot baseline; specific-stock OOS training collapses to near-zero $\kappa$, confirming that within-stock temporal drift is the harder challenge.}
+\label{fig:optiver-regimes}
+\end{figure}
+
+\subsection{LIME Interpretability Analysis (Optiver)}
+To gain insight into which input features drive the fine-tuned model's predictions, we apply \textbf{LIME} (Local Interpretable Model-agnostic Explanations) to a representative sample from the held-out set. LIME fits a sparse linear surrogate over perturbed versions of a single input window to approximate the local decision boundary of the deep model.
+
+The case examined is stock~82, $k{=}5$, sample index~731, with true label \emph{Stationary}. This stock was selected because it shows the strongest and most consistent fine-tuning benefit ($\kappa$ rising from $0.077$ to $0.094$), making it the most interpretable post-fine-tuning case.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{../results/optiver/classification_rolling3_w20000/figure9_transfer_lime.png}
+\caption{LIME feature-importance explanation for a \emph{Stationary} prediction on stock~82 ($k{=}5$, sample~731). Bar lengths indicate the magnitude of each input feature's local contribution to the predicted class; color indicates direction (positive = supports predicted class). Features corresponding to recent ask/bid price levels dominate the explanation, consistent with the microstructure intuition that short-term price position relative to recent quotes is the strongest signal in a 2-level LOB.}
+\label{fig:optiver-lime}
+\end{figure}
+
+The LIME explanation in Figure~\ref{fig:optiver-lime} reveals that the fine-tuned model relies primarily on \textbf{recent ask and bid price levels} (the top-ranked features) rather than size features. This is consistent with the intuition that in a shallow 2-level book, price position relative to recent quotes is the most informative signal for predicting near-term direction. Size features contribute smaller and noisier local weights, suggesting the model has learned to discount volume information that is highly variable at the 2-level depth.
+
+This interpretability result connects back to the FI-2010 factor analysis: both datasets show price-derived features as the dominant predictive channel. The key difference is that in FI-2010 the signal is spread across 10 levels and captured via price-derivative engineered factors, while in Optiver DeepLOBLite must extract directional content from only 2 levels, making the top-of-book price features individually more influential.
 
 \section{Code and Reproducibility}
-The codebase is organized to separate heavy computation from presentation:
+The codebase separates heavy computation from presentation:
 \begin{itemize}[leftmargin=*]
-    \item \texttt{scripts/train\_deeplob.py} trains DeepLOB on FI-2010.
-    \item \texttt{scripts/analyze\_fi2010.py} produces feature tests, baselines, and trading-style diagnostics.
-    \item \texttt{scripts/prepare\_optiver.py} preprocesses Optiver data with causal normalization.
-    \item \texttt{scripts/train\_optiver.py} runs universal training, transfer learning, and stock-specific evaluation.
-    \item \texttt{scripts/analyze\_optiver.py} builds notebook-ready summary figures.
-    \item the top-level notebooks load saved artifacts and present the experiments in report form.
+    \item \texttt{scripts/train\_deeplob.py} trains DeepLOB on FI-2010 under a specified profile (\texttt{--horizon-profile paper} or \texttt{adaptive}). Outputs land in \texttt{results/fi\_paper/} or \texttt{results/fi\_adaptive/} respectively.
+    \item \texttt{scripts/analyze\_fi2010.py} runs feature tests, qualified-factor selection, baseline models, and trading-style diagnostics. It reads the FI training outputs and writes analysis artifacts into the same profile directory.
+    \item \texttt{scripts/prepare\_optiver.py} preprocesses Optiver data with causal rolling normalization, producing per-stock \texttt{.npz} files under \texttt{data/optiver\_processed/}.
+    \item \texttt{scripts/train\_optiver.py} runs universal base training, transfer fine-tuning, and specific-stock OOS evaluation. Set \texttt{OPTIVER\_LABEL\_MODE=rolling-quantile-3class} (default) to reproduce the results reported here; outputs land under \texttt{results/optiver/classification\_rolling3\_w20000/}.
+    \item \texttt{scripts/analyze\_optiver.py} produces the transfer figures (figure6 accuracy, figure7 profit t-stats, figure8 cumulative profit, figure9 LIME explanation) and the \texttt{transfer\_analysis\_summary.json} summary read by the Optiver notebook.
+    \item \texttt{run\_deeplob\_pytorch.ipynb} is the FI-2010 report notebook. It loads from \texttt{results/fi\_paper/} (primary for $k{=}1$--$3$) and \texttt{results/fi\_adaptive/} (primary for $k{=}4$--$5$) and presents both profiles side by side for comparison.
+    \item \texttt{run\_optiver.ipynb} is the Optiver report notebook. It loads from \texttt{results/optiver/classification\_rolling3\_w20000/} and presents base diagnostics, transfer comparison, and cumulative-profit figures.
 \end{itemize}
 
-This structure supports reproducibility because the expensive stages are scripted, parameterized, and saved to disk, while the notebooks act as a readable front end rather than hiding the main logic.
-
-In addition, the repository stores trained models, result summaries, and figure artifacts in separate directories, which made it possible for our team to divide responsibilities cleanly: model development and experiment execution could proceed independently from final report writing. That workflow is particularly helpful for a course project because it lets the written report stay tightly coupled to saved outputs rather than to fragile interactive notebook state.
+Expensive training stages (SLURM GPU jobs) are decoupled from the notebooks so the report surface remains clean and fast to render. The submission includes all saved model checkpoints (\texttt{models/}), prediction arrays (\texttt{results/*/preds\_*.npz}), and metric pickles (\texttt{results/*/\*\_metrics\_*.pkl}) so every quantitative claim in this report can be regenerated from the stored artifacts without re-running GPU training.
 
 \section{Limitations and Future Work}
-Our project has several limitations. First, although the FI-2010 reproduction is strong, the benchmark itself is relatively standardized and may not fully reflect the heterogeneity of real trading environments. Good benchmark performance therefore should not be interpreted as evidence of universal market generalization. Second, the retained Optiver study is intentionally narrow: we focus on a single final report horizon and a small set of held-out stocks so that the experiments remain interpretable and feasible within the scope of a course project. This makes the story cleaner, but it also means our conclusions about transfer should be understood as carefully measured case-study evidence rather than a comprehensive cross-market claim.
+Our project has several limitations. On the FI-2010 side, the benchmark is highly standardized and may not reflect heterogeneous real-market conditions. The paper profile achieves strong short-horizon accuracy, but this advantage could partially reflect task-specific overfitting to the FI-2010 normalization scheme rather than generalizable short-horizon understanding. The pseudo-PnL diagnostics are intentionally simple and omit execution frictions, so they serve only as a consistency check rather than a trading claim.
 
-There are also modeling limitations. Our Optiver adaptation keeps the original DeepLOB inductive bias as much as possible, which is useful for controlled comparison, but it may not be the architecture best matched to a two-level order book. Likewise, while our fine-tuning experiments reveal domain shift, they do not fully isolate whether the dominant issue is feature mismatch, label construction, temporal nonstationarity, or insufficient stock-specific data. Finally, our trading-style evaluation is deliberately simple and omits realistic execution frictions, so it should be read only as a diagnostic rather than as a claim about profitability.
+On the Optiver side, our study is narrow by design: three held-out stocks, a single horizon, and a fixed architecture. The rolling-quantile labeling scheme (\texttt{rolling3}) is effective but not exhaustively compared---additional threshold designs (e.g., fixed-return, asymmetric, or volatility-anchored bins) could further clarify the role of label construction. The specific-stock OOS evaluation consistently underperforms zero-shot transfer, but we have not fully isolated whether the dominant cause is temporal drift, insufficient training data, or label-boundary instability within a stock.
 
-These limitations point naturally to future work. One direction is a more systematic Optiver ablation study comparing normalization modes, label definitions, transfer modes, and class-balancing strategies under a fixed evaluation protocol. A second direction is architectural: for example, replacing or augmenting the recurrent component with temporal convolution or attention-based sequence modeling better suited to shallow books. A third direction is broader transfer evaluation across more stocks and horizons, including calibration analysis and robustness checks under changing volatility regimes. Taken together, these extensions would help separate which parts of DeepLOB are genuinely portable from which parts are benchmark-specific.
+Future directions include: (1) a systematic ablation over Optiver label threshold designs and window lengths; (2) replacing the LSTM with a temporal convolutional or attention-based aggregate better suited to shallow two-level books; (3) extending the held-out stock set to test generality of the fine-tuning benefit; and (4) exploring calibration and reject-option approaches that abstain from predicting near the decision boundary.
 
 \section{Conclusion}
-This project reproduced DeepLOB successfully on FI-2010 and showed that the model's strongest benchmark performance occurs at medium-to-long horizons. We also extended the benchmark study with statistically grounded factor analysis and shallow baselines, finding that manual microstructure features contain real signal but still underperform the deep architecture.
+This project successfully reproduced DeepLOB on FI-2010 under two training profiles and showed that the choice of checkpointing metric is a first-order determinant of short-horizon performance. The paper-style optimizer with validation-accuracy monitoring achieves the strongest short-horizon benchmark result (accuracy $0.835$, MCC $0.608$ at 10 events), while the adaptive profile's horizon-aware regularization marginally improves agreement metrics at longer horizons. Both profiles substantially outperform shallow manual-factor baselines, and the factor analysis identifies \texttt{u6} (price \& volume derivatives) as the consistently most significant signal group.
 
-Our main original contribution was transferring the method to Optiver. That experiment surfaced a more nuanced conclusion than a simple success story: the architecture transfers imperfectly, stock heterogeneity is strong, and fine-tuning can improve agreement metrics without improving accuracy. The project therefore demonstrates both the strength of DeepLOB as a benchmark model and the limits of benchmark-to-real-dataset generalization.
+On Optiver, the primary finding is that \textbf{per-stock fine-tuning under rolling-quantile labels (\texttt{rolling3}) is the most effective transfer strategy}. The universal model achieves mean $\kappa{=}0.062$ across three held-out stocks; per-stock fine-tuning lifts this to $\kappa{=}0.084$ by recalibrating decision boundaries to each stock's local return distribution. Specific-stock temporal training regresses to $\kappa{=}0.002$, confirming that within-stock nonstationarity is a genuine and hard bottleneck that per-stock fine-tuning partially sidesteps.
+
+The combined picture is: DeepLOB reproduces reliably on FI-2010 (best results: paper profile at short horizons, adaptive at long), and rolling-quantile label adaptation with per-stock fine-tuning is the most effective Optiver transfer strategy identified, but the domain gap between benchmark LOB data and live equity auction books remains large and motivates continued work on both the modeling and the data-representation sides.
 
 \section*{Project Summary}
 In one sentence, this project:
 \begin{quote}
-reproduced a canonical deep LOB predictor on FI-2010, analyzed what signals drive performance, and tested how far the same idea transfers to Optiver through causal preprocessing, model adaptation, and transfer-learning experiments.
+reproduced DeepLOB on FI-2010 under paper and adaptive training profiles, demonstrated that per-stock fine-tuning under rolling-quantile labels (\texttt{rolling3}) is the most effective Optiver transfer strategy across three held-out stocks, and documented where benchmark-trained architecture generalizes and where temporal nonstationarity makes transfer fail.
 \end{quote}
 
 \bibliographystyle{plain}

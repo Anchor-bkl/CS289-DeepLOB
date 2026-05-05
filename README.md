@@ -15,9 +15,9 @@ The design principle is:
 
 The final report scope is now intentionally narrower than the full experiment history:
 
-- **FI report slice**: only `k=3 / 4 / 5` (`30 / 50 / 100` events)
-- **Optiver report slice**: only `k=5` on held-out stocks `5, 17, 42, 108, 120`
-- the cleaned project keeps only these retained configurations in the active tree
+- **FI report slice**: all 5 horizons (`k=1`–`5`, i.e., 10/20/30/50/100 events); paper profile is **primary for k=1–3**, adaptive profile is **primary for k=4–5**
+- **Optiver report slice**: `k=5` only; **`rolling3` (`classification_rolling3_w20000`) is the sole reported mode** (stocks 42, 17, 82)
+- the cleaned project keeps both FI profiles and both Optiver modes as active artifacts under `results/`
 
 ---
 
@@ -63,21 +63,26 @@ DeepLOB/
 ```text
 FI raw txt files
    ↓
-scripts/train_deeplob.py
+scripts/train_deeplob.py  (--horizon-profile paper)
    ↓
-models/deeplob_k*.pt
-results/losses_k*.npz
-results/preds_k*.npz
-results/loss_k*.png
-results/cm_k*.png
-results/performance_summary.csv
-results/all_results.pkl
+results/fi_paper/deeplob_k*.pt
+results/fi_paper/losses_k*.npz
+results/fi_paper/preds_k*.npz
+results/fi_paper/loss_k*.png
+results/fi_paper/cm_k*.png
+results/fi_paper/performance_summary.csv
+results/fi_paper/all_results.pkl
+                          (--horizon-profile adaptive)
    ↓
-scripts/analyze_fi2010.py
+results/fi_adaptive/  (same structure)
    ↓
-feature / factor / baseline / strategy artifacts in results/
+scripts/analyze_fi2010.py  (reads fi_paper profile; writes analysis artifacts)
    ↓
-run_deeplob_pytorch.ipynb
+results/fi_paper/feature_nw_ttest.png
+results/fi_paper/baseline_comparison.png
+results/fi_paper/qualified_factors.csv  … etc.
+   ↓
+run_deeplob_pytorch.ipynb  (loads fi_paper for k=1–3, fi_adaptive for k=4–5)
 ```
 
 ### Optiver chain
@@ -182,30 +187,26 @@ python3 scripts/analyze_fi2010.py
 - **Model**: 3 convolution blocks + inception module + LSTM + FC classifier,
    with an optional auxiliary regression head that predicts same-horizon future
    log return from the shared representation.
-- **Training policy used in the final report**:
-  - batch size `32`
-  - lookback `100`
-  - max epochs `100`
-  - `--horizon-profile adaptive`, which assigns separate learning-rate,
-    regularization, patience, and monitor choices to `k_idx=0..4`
-   - an auxiliary Huber loss on future log return is enabled by default in the
-      adaptive profile to regularize short horizons whose validation loss is most
-      jagged
-  - short horizons use macro-F1/MCC-oriented checkpointing to reduce
-    stationary-class collapse visible in their confusion matrices
-  - longer horizons use validation-loss checkpointing with stronger
-    regularization because their loss curves overfit earlier
-  - the 100-event horizon (`k_idx=4`, shown as `k=5`) uses:
-    - learning rate `7e-4`
-    - weight decay `3e-4`
-    - dropout `0.30`
-    - label smoothing `0.02`
-    - gradient clipping `1.0`
-    - checkpoint / early stopping monitored by validation loss
+- **Two training profiles are used in the final report** (both saved; report
+  takes the best per horizon-group):
 
-### Why the exact paper optimizer was not kept verbatim
+  | Profile | Flag | Primary horizons | Key settings |
+  |---|---|---|---|
+  | **Paper** | `--horizon-profile paper` | k=1–3 (10/20/30 events) | Adam lr=1e-3, val-accuracy checkpoint, uniform across horizons |
+  | **Adaptive** | `--horizon-profile adaptive` | k=4–5 (50/100 events) | horizon-aware lr/reg, macro-F1 monitor for short k, val-loss monitor for long k |
 
-The direct `Adam + lr=0.01` paper-style setting caused majority-class collapse in this environment: validation accuracy froze at the stationary-class prior and validation loss exploded. The current setup preserves the **paper architecture and experimental logic** but uses a **stabilized optimizer configuration** that trains reliably on this codebase.
+  **Paper profile** (primary for short horizons):
+  - Adam lr `1e-3`, batch `32`, lookback `100`, max epochs `100`
+  - Validation-accuracy checkpointing; no horizon-specific tuning
+  - Achieves accuracy `0.835`, MCC `0.608` at 10 events
+  - Outputs → `results/fi_paper/`
+
+  **Adaptive profile** (primary for long horizons):
+  - Per-horizon regularization; short horizons use macro-F1/MCC monitoring
+  - Long horizons (k=4,5): lr `7e-4`, weight decay `3e-4`, dropout `0.30`,
+    label smoothing `0.02`, gradient clipping `1.0`, val-loss checkpoint
+  - Achieves MCC `0.694` at 100 events (vs `0.684` paper profile)
+  - Outputs → `results/fi_adaptive/`
 
 ### FI analysis outputs
 
@@ -217,14 +218,14 @@ The direct `Adam + lr=0.01` paper-style setting caused majority-class collapse i
 - baseline models,
 - simple strategy-style statistics.
 
-Representative outputs:
+Representative outputs (written to `results/fi_paper/` by default):
 
-- `results/feature_predictability.csv`
-- `results/rolling_stability.csv`
-- `results/qualified_factors.csv`
-- `results/baseline_model_comparison.csv`
-- `results/trading_strategy_stats.csv`
-- related `png` visualizations
+- `results/fi_paper/feature_predictability.csv`
+- `results/fi_paper/rolling_stability.csv`
+- `results/fi_paper/qualified_factors.csv`
+- `results/fi_paper/baseline_model_comparison.csv`
+- `results/fi_paper/trading_strategy_stats.csv`
+- `results/fi_paper/feature_nw_ttest.png`, `baseline_comparison.png`, etc.
 
 #### Step A2 — notebook report
 
@@ -321,11 +322,11 @@ FI-2010, the current workflow intentionally does **not** reuse the FI horizon
 parameters. It uses:
 
 - per-stock relabeling during training to prevent trivial majority-class predictions:
-   the retained Optiver workflow now keeps two 3-class variants:
-   `Original 3` uses the prepared adaptive rolling-std labels via
-   `--label-mode original`, while `rolling 3` uses a rolling historical
-   quantile threshold on each stock's k-step returns via
-   `--label-mode rolling-quantile-3class --quantile-stationary 0.2`;
+   the retained Optiver workflow uses **rolling-quantile 3-class labels**
+   (`--label-mode rolling-quantile-3class --quantile-stationary 0.2`);
+   class boundaries are the rolling 33rd/67th percentile of absolute k-step
+   returns over a 20 000-sample window, producing approximately balanced
+   class frequencies that adapt to each stock's return scale;
    explicit CLI / environment label overrides are applied after the adaptive k=5
    defaults, so retained overrides now win instead of being silently reset,
 - focal loss plus horizon-specific class balancing,
@@ -345,11 +346,15 @@ parameters. It uses:
 
 ### Optiver outputs
 
-Training writes:
+Training writes to:
 
-- `results/optiver/classification_original3/` for `Original 3`
-- `results/optiver/classification_rolling3_w20000/` for the default `rolling 3`
-- inside each mode-specific directory: `base_metrics_k*.pkl`, `transfer_metrics_k*.pkl`, `specific_metrics_k*.pkl`, `base_loss_k*.png`, `transfer_comparison_k*.png`, and related training figures
+- `results/optiver/classification_rolling3_w20000/` — the sole reported Optiver mode
+  - `base_metrics_k5.pkl` — universal zero-shot metrics (stocks 42/17/82)
+  - `transfer_metrics_k5.pkl` — per-stock fine-tuning metrics
+  - `specific_metrics_k5.pkl` — specific-stock OOS metrics
+  - `base_loss_k5.png`, `cm_base_k5.png` — base model diagnostics
+  - `transfer_comparison_k5.png`, `transfer_regimes_k5.png` — regime comparison
+  - `figure6_transfer_accuracy.png`, `figure8_transfer_cum_profit.png` — report figures
 
 Practical note: full-window base training on all prepared Optiver events is not the default because the processed train split contains on the order of $10^8$ valid windows. The workflow therefore keeps a configurable per-stock cap for base and transfer sampling, while still allowing `<=0` to request the uncapped path for targeted experiments.
 
@@ -411,12 +416,16 @@ run_deeplob_pytorch.ipynb
 
 ```bash
 sbatch submit_optiver.sh
-sbatch --export=ALL,OPTIVER_LABEL_MODE=rolling-quantile-3class submit_optiver.sh
 ```
 
-This training-first path now keeps two retained Optiver variants for the final `k=5` slice: `Original 3` and `rolling 3`.
+The default label mode is `rolling-quantile-3class` (stocks 42/17/82, k=5).
+Outputs land under `results/optiver/classification_rolling3_w20000/`.
 
-If you also need the paper-style figures in the same output directory, rerun with `OPTIVER_RUN_ANALYSIS=1`.
+To also generate the paper-style transfer figures, rerun with:
+
+```bash
+sbatch --export=ALL,OPTIVER_RUN_ANALYSIS=1 submit_optiver.sh
+```
 
 Then open:
 
