@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2024.10.8)  5 MAY 2026 00:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2024.10.8)  5 MAY 2026 01:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -912,189 +912,318 @@ y/m/n/10.95 g\OML/lmm/m/it/10.95 :
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 83.
 [3] [4] [5]
-<../results/fi_paper/cm_k0.png, id=152, 888.4392pt x 398.4486pt>
+<../results/fi_paper/loss_k0.png, id=152, 1128.3756pt x 658.6206pt>
+File: ../results/fi_paper/loss_k0.png Graphic file (type png)
+<use ../results/fi_paper/loss_k0.png>
+Package pdftex.def Info: ../results/fi_paper/loss_k0.png  used on input line 18
+6. on input line 186.
+Package pdftex.def Info: Requested size: 150.32504pt x 87.73412pt on input line
+ 186.
+<../results/fi_paper/loss_k1.png, id=154, 1128.3756pt x 658.6206pt>
+File: ../results/fi_paper/loss_k1.png Graphic file (type png)
+<use ../results/fi_paper/loss_k1.png>
+Package pdftex.def Info: ../results/fi_paper/loss_k1.png  used on input line 19
+0. on input line 190.
+Package pdftex.def Info: Requested size: 150.32504pt x 87.73412pt on input line
+ 190.
+<../results/fi_paper/loss_k2.png, id=155, 1128.3756pt x 658.6206pt>
+File: ../results/fi_paper/loss_k2.png Graphic file (type png)
+<use ../results/fi_paper/loss_k2.png>
+Package pdftex.def Info: ../results/fi_paper/loss_k2.png  used on input line 19
+4. on input line 194.
+Package pdftex.def Info: Requested size: 150.32504pt x 87.73412pt on input line
+ 194.
+ [6]
+<../results/fi_paper/cm_k0.png, id=161, 888.4392pt x 398.4486pt>
 File: ../results/fi_paper/cm_k0.png Graphic file (type png)
 <use ../results/fi_paper/cm_k0.png>
-Package pdftex.def Info: ../results/fi_paper/cm_k0.png  used on input line 182.
- on input line 182.
-Package pdftex.def Info: Requested size: 230.18253pt x 103.2294pt on input line
- 182.
-<../results/fi_adaptive/cm_k0.png, id=154, 888.4392pt x 398.4486pt>
+Package pdftex.def Info: ../results/fi_paper/cm_k0.png  used on input line 204.
+ on input line 204.
+Package pdftex.def Info: Requested size: 150.32504pt x 67.41313pt on input line
+ 204.
+<../results/fi_paper/cm_k1.png, id=162, 888.4392pt x 398.4486pt>
+File: ../results/fi_paper/cm_k1.png Graphic file (type png)
+<use ../results/fi_paper/cm_k1.png>
+Package pdftex.def Info: ../results/fi_paper/cm_k1.png  used on input line 208.
+ on input line 208.
+Package pdftex.def Info: Requested size: 150.32504pt x 67.41313pt on input line
+ 208.
+<../results/fi_paper/cm_k2.png, id=163, 888.4392pt x 398.4486pt>
+File: ../results/fi_paper/cm_k2.png Graphic file (type png)
+<use ../results/fi_paper/cm_k2.png>
+Package pdftex.def Info: ../results/fi_paper/cm_k2.png  used on input line 212.
+ on input line 212.
+Package pdftex.def Info: Requested size: 150.32504pt x 67.41313pt on input line
+ 212.
+File: ../results/fi_paper/cm_k0.png Graphic file (type png)
+<use ../results/fi_paper/cm_k0.png>
+Package pdftex.def Info: ../results/fi_paper/cm_k0.png  used on input line 223.
+ on input line 223.
+Package pdftex.def Info: Requested size: 225.4804pt x 101.11969pt on input line
+ 223.
+<../results/fi_adaptive/cm_k0.png, id=166, 888.4392pt x 398.4486pt>
 File: ../results/fi_adaptive/cm_k0.png Graphic file (type png)
 <use ../results/fi_adaptive/cm_k0.png>
-Package pdftex.def Info: ../results/fi_adaptive/cm_k0.png  used on input line 1
-88. on input line 188.
-Package pdftex.def Info: Requested size: 230.18253pt x 103.2294pt on input line
- 188.
- [6]
-<../results/fi_paper/loss_k4.png, id=160, 1128.3756pt x 658.6206pt>
-File: ../results/fi_paper/loss_k4.png Graphic file (type png)
-<use ../results/fi_paper/loss_k4.png>
-Package pdftex.def Info: ../results/fi_paper/loss_k4.png  used on input line 19
-9. on input line 199.
-Package pdftex.def Info: Requested size: 230.18253pt x 134.35481pt on input lin
-e 199.
-<../results/fi_adaptive/loss_k4.png, id=161, 1128.3756pt x 658.6206pt>
+Package pdftex.def Info: ../results/fi_adaptive/cm_k0.png  used on input line 2
+27. on input line 227.
+Package pdftex.def Info: Requested size: 225.4804pt x 101.11969pt on input line
+ 227.
+<../results/fi_adaptive/loss_k3.png, id=167, 1128.3756pt x 658.6206pt>
+File: ../results/fi_adaptive/loss_k3.png Graphic file (type png)
+<use ../results/fi_adaptive/loss_k3.png>
+Package pdftex.def Info: ../results/fi_adaptive/loss_k3.png  used on input line
+ 242. on input line 242.
+Package pdftex.def Info: Requested size: 225.4804pt x 131.61124pt on input line
+ 242.
+<../results/fi_adaptive/loss_k4.png, id=168, 1128.3756pt x 658.6206pt>
 File: ../results/fi_adaptive/loss_k4.png Graphic file (type png)
 <use ../results/fi_adaptive/loss_k4.png>
 Package pdftex.def Info: ../results/fi_adaptive/loss_k4.png  used on input line
- 205. on input line 205.
-Package pdftex.def Info: Requested size: 230.18253pt x 134.35481pt on input lin
-e 205.
- [7 <../results/fi_paper/cm_k0.png> <../results/fi_adaptive/cm_k0.png> <../resu
-lts/fi_paper/loss_k4.png> <../results/fi_adaptive/loss_k4.png>]
-<../results/fi_paper/feature_nw_ttest.png, id=174, 1300.86pt x 578.16pt>
+ 246. on input line 246.
+Package pdftex.def Info: Requested size: 225.4804pt x 131.61124pt on input line
+ 246.
+ [7 <../results/fi_paper/loss_k0.png> <../results/fi_paper/loss_k1.png> <../res
+ults/fi_paper/loss_k2.png> <../results/fi_paper/cm_k0.png> <../results/fi_paper
+/cm_k1.png> <../results/fi_paper/cm_k2.png> <../results/fi_adaptive/cm_k0.png>]
+<../results/fi_adaptive/cm_k3.png, id=186, 888.4392pt x 398.4486pt>
+File: ../results/fi_adaptive/cm_k3.png Graphic file (type png)
+<use ../results/fi_adaptive/cm_k3.png>
+Package pdftex.def Info: ../results/fi_adaptive/cm_k3.png  used on input line 2
+56. on input line 256.
+Package pdftex.def Info: Requested size: 225.4804pt x 101.11969pt on input line
+ 256.
+<../results/fi_adaptive/cm_k4.png, id=187, 888.4392pt x 398.4486pt>
+File: ../results/fi_adaptive/cm_k4.png Graphic file (type png)
+<use ../results/fi_adaptive/cm_k4.png>
+Package pdftex.def Info: ../results/fi_adaptive/cm_k4.png  used on input line 2
+60. on input line 260.
+Package pdftex.def Info: Requested size: 225.4804pt x 101.11969pt on input line
+ 260.
+
+
+LaTeX Warning: Reference `fig:fi-paper-loss-long' on page 8 undefined on input 
+line 267.
+
+<../results/fi_paper/loss_k3.png, id=188, 1128.3756pt x 658.6206pt>
+File: ../results/fi_paper/loss_k3.png Graphic file (type png)
+<use ../results/fi_paper/loss_k3.png>
+Package pdftex.def Info: ../results/fi_paper/loss_k3.png  used on input line 27
+2. on input line 272.
+Package pdftex.def Info: Requested size: 225.4804pt x 131.61124pt on input line
+ 272.
+<../results/fi_paper/loss_k4.png, id=189, 1128.3756pt x 658.6206pt>
+File: ../results/fi_paper/loss_k4.png Graphic file (type png)
+<use ../results/fi_paper/loss_k4.png>
+Package pdftex.def Info: ../results/fi_paper/loss_k4.png  used on input line 27
+6. on input line 276.
+Package pdftex.def Info: Requested size: 225.4804pt x 131.61124pt on input line
+ 276.
+[8 <../results/fi_adaptive/loss_k3.png> <../results/fi_adaptive/loss_k4.png> <.
+./results/fi_adaptive/cm_k3.png> <../results/fi_adaptive/cm_k4.png>]
+
+LaTeX Warning: Reference `fig:fi-nw' on page 9 undefined on input line 295.
+
+
+LaTeX Warning: Reference `fig:fi-rolling' on page 9 undefined on input line 297
+.
+
+
+LaTeX Warning: Reference `fig:fi-mono-ic' on page 9 undefined on input line 299
+.
+
+[9 <../results/fi_paper/loss_k3.png> <../results/fi_paper/loss_k4.png>]
+<../results/fi_paper/feature_nw_ttest.png, id=215, 1300.86pt x 578.16pt>
 File: ../results/fi_paper/feature_nw_ttest.png Graphic file (type png)
 <use ../results/fi_paper/feature_nw_ttest.png>
 Package pdftex.def Info: ../results/fi_paper/feature_nw_ttest.png  used on inpu
-t line 223. on input line 223.
-Package pdftex.def Info: Requested size: 230.18253pt x 102.2999pt on input line
- 223.
-<../results/fi_paper/baseline_comparison.png, id=175, 1156.32pt x 325.215pt>
+t line 309. on input line 309.
+Package pdftex.def Info: Requested size: 225.4804pt x 100.20909pt on input line
+ 309.
+<../results/fi_paper/rolling_ttest.png, id=216, 1011.78pt x 325.215pt>
+File: ../results/fi_paper/rolling_ttest.png Graphic file (type png)
+<use ../results/fi_paper/rolling_ttest.png>
+Package pdftex.def Info: ../results/fi_paper/rolling_ttest.png  used on input l
+ine 314. on input line 314.
+Package pdftex.def Info: Requested size: 225.4804pt x 72.47548pt on input line 
+314.
+<../results/fi_paper/qualified_monotonicity.png, id=217, 1300.86pt x 1445.4pt>
+File: ../results/fi_paper/qualified_monotonicity.png Graphic file (type png)
+<use ../results/fi_paper/qualified_monotonicity.png>
+Package pdftex.def Info: ../results/fi_paper/qualified_monotonicity.png  used o
+n input line 325. on input line 325.
+Package pdftex.def Info: Requested size: 225.4804pt x 250.52274pt on input line
+ 325.
+<../results/fi_paper/factor_rank_ic.png, id=218, 1300.86pt x 1734.48pt>
+File: ../results/fi_paper/factor_rank_ic.png Graphic file (type png)
+<use ../results/fi_paper/factor_rank_ic.png>
+Package pdftex.def Info: ../results/fi_paper/factor_rank_ic.png  used on input 
+line 329. on input line 329.
+Package pdftex.def Info: Requested size: 225.4804pt x 300.62729pt on input line
+ 329.
+
+[10 <../results/fi_paper/feature_nw_ttest.png> <../results/fi_paper/rolling_tte
+st.png>]
+<../results/fi_paper/baseline_comparison.png, id=226, 1156.32pt x 325.215pt>
 File: ../results/fi_paper/baseline_comparison.png Graphic file (type png)
 <use ../results/fi_paper/baseline_comparison.png>
 Package pdftex.def Info: ../results/fi_paper/baseline_comparison.png  used on i
-nput line 229. on input line 229.
-Package pdftex.def Info: Requested size: 230.18253pt x 64.73418pt on input line
- 229.
-
-Underfull \hbox (badness 4608) in paragraph at lines 230--230
-[]\T1/lmr/m/n/10 (+20) (b) |Base-line model com-par-i-son (pa-per pro-file
- []
-
+nput line 339. on input line 339.
+Package pdftex.def Info: Requested size: 225.4804pt x 63.41418pt on input line 
+339.
+<../results/fi_paper/trading_profit_ttest.png, id=227, 867.24pt x 325.215pt>
+File: ../results/fi_paper/trading_profit_ttest.png Graphic file (type png)
+<use ../results/fi_paper/trading_profit_ttest.png>
+Package pdftex.def Info: ../results/fi_paper/trading_profit_ttest.png  used on 
+input line 343. on input line 343.
+Package pdftex.def Info: Requested size: 225.4804pt x 84.5539pt on input line 3
+43.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 236.
-<../results/optiver/classification_rolling3_w20000/base_loss_k5.png, id=176, 63
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 350.
+<../results/optiver/classification_rolling3_w20000/base_loss_k5.png, id=228, 63
 5.976pt x 346.896pt>
 File: ../results/optiver/classification_rolling3_w20000/base_loss_k5.png Graphi
 c file (type png)
 <use ../results/optiver/classification_rolling3_w20000/base_loss_k5.png>
 Package pdftex.def Info: ../results/optiver/classification_rolling3_w20000/base
-_loss_k5.png  used on input line 241. on input line 241.
+_loss_k5.png  used on input line 355. on input line 355.
 Package pdftex.def Info: Requested size: 230.18253pt x 125.55469pt on input lin
-e 241.
-<../results/optiver/classification_rolling3_w20000/cm_base_k5.png, id=177, 867.
+e 355.
+<../results/optiver/classification_rolling3_w20000/cm_base_k5.png, id=229, 867.
 24pt x 289.08pt>
 File: ../results/optiver/classification_rolling3_w20000/cm_base_k5.png Graphic 
 file (type png)
 <use ../results/optiver/classification_rolling3_w20000/cm_base_k5.png>
 Package pdftex.def Info: ../results/optiver/classification_rolling3_w20000/cm_b
-ase_k5.png  used on input line 247. on input line 247.
+ase_k5.png  used on input line 361. on input line 361.
 Package pdftex.def Info: Requested size: 230.18253pt x 76.72493pt on input line
- 247.
-[8 <../results/fi_paper/feature_nw_ttest.png> <../results/fi_paper/baseline_com
-parison.png> <../results/optiver/classification_rolling3_w20000/base_loss_k5.pn
-g> <../results/optiver/classification_rolling3_w20000/cm_base_k5.png>]
+ 361.
+ [11 <../results/fi_paper/qualified_monotonicity.png> <../results/fi_paper/fact
+or_rank_ic.png> <../results/fi_paper/baseline_comparison.png> <../results/fi_pa
+per/trading_profit_ttest.png>] [12 <../results/optiver/classification_rolling3_
+w20000/base_loss_k5.png> <../results/optiver/classification_rolling3_w20000/cm_
+base_k5.png>]
 <../results/optiver/classification_rolling3_w20000/figure6_transfer_accuracy.pn
-g, id=191, 1011.78pt x 722.7pt>
+g, id=251, 1011.78pt x 722.7pt>
 File: ../results/optiver/classification_rolling3_w20000/figure6_transfer_accura
 cy.png Graphic file (type png)
 <use ../results/optiver/classification_rolling3_w20000/figure6_transfer_accurac
 y.png>
 Package pdftex.def Info: ../results/optiver/classification_rolling3_w20000/figu
-re6_transfer_accuracy.png  used on input line 300. on input line 300.
+re6_transfer_accuracy.png  used on input line 414. on input line 414.
 Package pdftex.def Info: Requested size: 338.22418pt x 241.59045pt on input lin
-e 300.
- [9]
+e 414.
+ [13]
 <../results/optiver/classification_rolling3_w20000/figure8_transfer_cum_profit.
-png, id=198, 860.013pt x 593.13022pt>
+png, id=258, 860.013pt x 593.13022pt>
 File: ../results/optiver/classification_rolling3_w20000/figure8_transfer_cum_pr
 ofit.png Graphic file (type png)
 <use ../results/optiver/classification_rolling3_w20000/figure8_transfer_cum_pro
 fit.png>
 Package pdftex.def Info: ../results/optiver/classification_rolling3_w20000/figu
-re8_transfer_cum_profit.png  used on input line 307. on input line 307.
+re8_transfer_cum_profit.png  used on input line 421. on input line 421.
 Package pdftex.def Info: Requested size: 338.22418pt x 233.26569pt on input lin
-e 307.
+e 421.
 <../results/optiver/classification_rolling3_w20000/transfer_comparison_k5.png, 
-id=199, 722.7pt x 361.35pt>
+id=259, 722.7pt x 361.35pt>
 File: ../results/optiver/classification_rolling3_w20000/transfer_comparison_k5.
 png Graphic file (type png)
 <use ../results/optiver/classification_rolling3_w20000/transfer_comparison_k5.p
 ng>
 Package pdftex.def Info: ../results/optiver/classification_rolling3_w20000/tran
-sfer_comparison_k5.png  used on input line 314. on input line 314.
+sfer_comparison_k5.png  used on input line 428. on input line 428.
 Package pdftex.def Info: Requested size: 338.22418pt x 169.11221pt on input lin
-e 314.
-
-[10 <../results/optiver/classification_rolling3_w20000/figure6_transfer_accurac
-y.png> <../results/optiver/classification_rolling3_w20000/figure8_transfer_cum_
-profit.png>]
+e 428.
+ [14 <../results/optiver/classification_rolling3_w20000/figure6_transfer_accura
+cy.png> <../results/optiver/classification_rolling3_w20000/figure8_transfer_cum
+_profit.png>]
 <../results/optiver/classification_rolling3_w20000/figure9_transfer_lime.png, i
-d=207, 1011.78pt x 650.43pt>
+d=268, 1011.78pt x 650.43pt>
 File: ../results/optiver/classification_rolling3_w20000/figure9_transfer_lime.p
 ng Graphic file (type png)
 <use ../results/optiver/classification_rolling3_w20000/figure9_transfer_lime.pn
 g>
 Package pdftex.def Info: ../results/optiver/classification_rolling3_w20000/figu
-re9_transfer_lime.png  used on input line 326. on input line 326.
+re9_transfer_lime.png  used on input line 440. on input line 440.
 Package pdftex.def Info: Requested size: 385.20255pt x 247.63243pt on input lin
-e 326.
- [11 <../results/optiver/classification_rolling3_w20000/transfer_comparison_k5.
+e 440.
+ [15 <../results/optiver/classification_rolling3_w20000/transfer_comparison_k5.
 png>]
-Overfull \hbox (18.9068pt too wide) in paragraph at lines 338--339
+Overfull \hbox (18.9068pt too wide) in paragraph at lines 452--453
 []\T1/lmtt/m/n/10.95 scripts/train_deeplob.py \T1/lmr/m/n/10.95 (-20) trains De
 epLOB on FI-2010 un-der a spec-i-fied pro-file (\T1/lmtt/m/n/10.95 --horizon-pr
 ofile
  []
 
-[12 <../results/optiver/classification_rolling3_w20000/figure9_transfer_lime.pn
+[16 <../results/optiver/classification_rolling3_w20000/figure9_transfer_lime.pn
 g>]
-Overfull \hbox (20.4914pt too wide) in paragraph at lines 341--342
+Overfull \hbox (20.4914pt too wide) in paragraph at lines 455--456
 \T1/lmr/m/n/10.95 (-20) the re-sults re-ported here; out-puts land un-der \T1/l
 mtt/m/n/10.95 results/optiver/classification_rolling3_w20000/\T1/lmr/m/n/10.95 
 (-20) . 
  []
 
 
-Overfull \hbox (22.6972pt too wide) in paragraph at lines 342--343
+Overfull \hbox (22.6972pt too wide) in paragraph at lines 456--457
 \T1/lmr/m/n/10.95 (-20) stats, fig-ure8 cu-mu-la-tive profit, fig-ure9 LIME ex-
 pla-na-tion) and the \T1/lmtt/m/n/10.95 transfer_analysis_summary.json
  []
 
 
-Overfull \hbox (118.82468pt too wide) in paragraph at lines 344--345
+Overfull \hbox (118.82468pt too wide) in paragraph at lines 458--459
 []\T1/lmtt/m/n/10.95 run_optiver.ipynb \T1/lmr/m/n/10.95 (-20) is the Op-tiver 
 re-port note-book. It loads from \T1/lmtt/m/n/10.95 results/optiver/classificat
 ion_rolling3_w20000/
  []
 
-[13] (./final_report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 372.
- [14]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 372.
+[17] (./final_report.bbl)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 486.
+ [18]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 486.
  (./final_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 372.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 372.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 486.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 486.
 Package rerunfilecheck Info: File `final_report.out' has not changed.
 (rerunfilecheck)             Checksum: 2C470C2C2D8CEC84D42E2747D2CAE82E;1932.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 372.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 486.
  ) 
 Here is how much of TeX's memory you used:
- 10861 strings out of 494917
- 166037 string characters out of 6180699
+ 10970 strings out of 494917
+ 168866 string characters out of 6180699
  289763 words of memory out of 5000000
- 13746 multiletter control sequences out of 15000+600000
- 87401 words of font info for 164 fonts, out of 8000000 for 9000
+ 13811 multiletter control sequences out of 15000+600000
+ 87899 words of font info for 170 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 42i,9n,47p,2172b,472s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texli
-ve/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texlive/texmf-dist/f
-onts/enc/dvips/lm/lm-ec.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/l
-m-mathit.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/lm/lmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/lm/lmtk10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtt10.pfb
->
-Output written on final_report.pdf (14 pages, 1354974 bytes).
+ 42i,9n,61p,2172b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{figure.caption.13} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{table.caption.8} has been referenced but does not e
+xist, replaced by a fixed one
+
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/tex
+live/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texlive/texmf-dist/fon
+ts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/lm
+/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/lm/lmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+lm/lmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr12.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/lm/lmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+lm/lmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on final_report.pdf (18 pages, 3582626 bytes).
 PDF statistics:
- 291 PDF objects out of 1000 (max. 8388607)
- 237 compressed objects within 3 object streams
- 63 named destinations out of 1000 (max. 500000)
- 26373 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 359 PDF objects out of 1000 (max. 8388607)
+ 273 compressed objects within 3 object streams
+ 83 named destinations out of 1000 (max. 500000)
+ 26438 words of extra memory for PDF output out of 29859 (max. 10000000)
 

@@ -175,62 +175,176 @@ Two patterns are immediately apparent. First, the paper profile dominates at sho
 
 MCC and $\kappa$ both increase monotonically through 20--100 events for the paper profile, confirming that longer-horizon labels are less dominated by ambiguous near-stationary states. \textbf{Our primary headline numbers therefore come from two sources:} paper profile for $k{=}1$--$3$ (accuracy $0.835$/$0.751$/$0.773$) where direct accuracy supervision is most effective, and adaptive profile for $k{=}4$--$5$ (MCC $0.675$/$0.694$) where horizon-aware regularization prevents overfitting. The loss curves and confusion matrices for each profile and horizon are saved under \texttt{results/fi\_paper/} and \texttt{results/fi\_adaptive/} respectively.
 
+% ---------------------------------------------------------------
+% Short-horizon (k=1–3): paper profile is primary
+% ---------------------------------------------------------------
+\subsubsection*{Short Horizons (10/20/30 events): Paper Profile Primary}
+
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.49\textwidth}
-    \centering
+\begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k0.png}
+    \caption{Loss, 10 ev (paper)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k1.png}
+    \caption{Loss, 20 ev (paper)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k2.png}
+    \caption{Loss, 30 ev (paper)}
+\end{subfigure}
+\caption{Training and validation loss curves for the paper profile at short event horizons (k=1--3). The 10-event curve shows typical early noise before settling; the 20- and 30-event curves converge more smoothly, consistent with less noisy gradient signal at these horizons.}
+\label{fig:fi-paper-loss-short}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.32\textwidth}
     \includegraphics[width=\textwidth]{../results/fi_paper/cm_k0.png}
-    \caption{Paper profile: confusion matrix, 10-event horizon}
+    \caption{CM, 10 ev (paper)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/cm_k1.png}
+    \caption{CM, 20 ev (paper)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/cm_k2.png}
+    \caption{CM, 30 ev (paper)}
 \end{subfigure}
-\hfill
-\begin{subfigure}[b]{0.49\textwidth}
-    \centering
+\caption{Confusion matrices for the paper profile at short horizons. At 10 events, both up and down classes are predicted aggressively (high recall, large off-diagonal entries reflect label ambiguity). By 30 events the class separation is much cleaner---down/up recall rises while the stationary mass is reduced---matching the MCC improvement in Table~\ref{tab:fi-main}.}
+\label{fig:fi-paper-cm-short}
+\end{figure}
+
+The contrast with the adaptive profile is sharpest at the 10-event horizon.
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/cm_k0.png}
+    \caption{Paper profile (primary): acc $0.835$, MCC $0.608$}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{../results/fi_adaptive/cm_k0.png}
-    \caption{Adaptive profile: confusion matrix, 10-event horizon}
+    \caption{Adaptive profile (comparison): acc $0.741$, MCC $0.414$}
 \end{subfigure}
-\caption{Confusion matrices at the 10-event horizon highlight the key contrast: the paper profile predicts up/down classes much more aggressively (fewer false-stationary errors), yielding higher accuracy and MCC; the adaptive profile uses macro-F1 monitoring, which partially corrects collapse but sacrifices raw accuracy.}
-\label{fig:fi-cm-k1}
+\caption{Head-to-head confusion matrices at the 10-event horizon. The paper profile (validation-accuracy checkpoint) predicts up/down classes more aggressively, recovering minority-class predictions that the adaptive profile loses due to its macro-F1 monitor. This demonstrates that the checkpointing metric choice is a first-order design decision at short horizons.}
+\label{fig:fi-cm-k0-compare}
 \end{figure}
+
+% ---------------------------------------------------------------
+% Long-horizon (k=4–5): adaptive profile is primary
+% ---------------------------------------------------------------
+\subsubsection*{Long Horizons (50/100 events): Adaptive Profile Primary}
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.49\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k4.png}
-    \caption{Paper profile: training/validation loss, 50-event horizon}
-\end{subfigure}
-\hfill
-\begin{subfigure}[b]{0.49\textwidth}
-    \centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_adaptive/loss_k3.png}
+    \caption{Loss, 50 ev (adaptive, primary)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{../results/fi_adaptive/loss_k4.png}
-    \caption{Adaptive profile: training/validation loss, 50-event horizon}
+    \caption{Loss, 100 ev (adaptive, primary)}
 \end{subfigure}
-\caption{Loss curves at 50 events. Both profiles converge cleanly. The adaptive profile stops earlier due to the tighter regularization schedule, whereas the paper profile trains longer before early-stopping triggers.}
-\label{fig:fi-loss-k4}
+\caption{Training and validation loss curves for the adaptive profile at long horizons (k=4--5). Both converge cleanly; the regularization schedule causes earlier stopping than the paper profile, preventing the mild overfitting visible in the paper-profile loss curves at these horizons.}
+\label{fig:fi-adaptive-loss-long}
 \end{figure}
-
-\subsection{FI-2010 Baselines and Factor Analysis}
-The manual-factor baselines underperform the deep model. Under the paper profile, ridge logistic regression reaches accuracy $0.710$ with near-zero $\kappa$ ($0.004$), and a two-layer MLP reaches accuracy $0.716$ with MCC $0.191$. DeepLOB under the paper profile improves accuracy to $0.835$ and MCC to $0.608$ at the comparable short-horizon setting. This large gap---particularly in $\kappa$ and MCC---demonstrates that the deep architecture extracts timing and shape information that cannot be recovered from a fixed engineered feature set.
-
-Out of 104 engineered features tested, 21 survive the qualification pipeline. Most of the strongest signals belong to the ``price \& volume derivatives'' group (set \texttt{u6}). Feature~1 in this group has $t_\text{NW}=11.29$, and feature~3 has $t_\text{NW}=10.84$. Rolling-window analysis confirms that these factors remain significant across a large fraction of windows, indicating that their predictive content is regime-stable rather than driven by a localized spike.
-
-One honest limitation is that the strategy-style pseudo-PnL diagnostics are weak across both profiles. The short horizons show borderline-positive but insignificant Sharpe-like statistics (k=1 Sharpe $0.072$, $p=0.230$); longer horizons turn negative. This is expected: raw classification accuracy on a benchmark does not imply profitable round-trip trading under realistic frictions.
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}[b]{0.49\textwidth}
-    \centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_adaptive/cm_k3.png}
+    \caption{CM, 50 ev (adaptive, primary)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_adaptive/cm_k4.png}
+    \caption{CM, 100 ev (adaptive, primary)}
+\end{subfigure}
+\caption{Confusion matrices for the adaptive profile at long horizons. By 100 events the class separation is strong---both up and down classes show high recall and the stationary mass is substantially reduced---consistent with MCC $0.694$, the best agreement metric across all profiles and horizons.}
+\label{fig:fi-adaptive-cm-long}
+\end{figure}
+
+For direct comparison at 50 events, the paper profile also converges cleanly (Figure~\ref{fig:fi-paper-loss-long}) but its loss curve reveals slightly later early-stopping and marginally lower final MCC ($0.666$ vs $0.675$).
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k3.png}
+    \caption{Paper profile, 50 ev (comparison)}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/loss_k4.png}
+    \caption{Paper profile, 100 ev (comparison)}
+\end{subfigure}
+\caption{Paper profile loss at long horizons for comparison. Training proceeds further before early stopping, but the validation curve begins a slight upward trend at 100 events---the regularization gap that the adaptive profile closes.}
+\label{fig:fi-paper-loss-long}
+\end{figure}
+
+% ---------------------------------------------------------------
+% Baselines and Factor Analysis
+% ---------------------------------------------------------------
+\subsection{FI-2010 Baselines and Factor Analysis}
+
+\paragraph{Baseline models.}
+We train two shallow baselines on a fixed set of 104 engineered microstructure features at the 10-event horizon, providing a lower bound on what hand-crafted signals can achieve without deep temporal modeling. Ridge logistic regression reaches accuracy $0.710$ ($\kappa{=}0.004$, MCC$=0.031$)---essentially predicting the majority stationary class with minor deviations. A two-layer MLP (hidden sizes 64/32) improves to accuracy $0.716$ (MCC$=0.191$), recovering some directional signal. DeepLOB under the paper profile improves to accuracy $0.835$ (MCC$=0.608$), a gap of 0.12 in accuracy and 0.42 in MCC over the best shallow baseline. This demonstrates that the deep architecture fuses temporal and cross-level patterns that cannot be recovered from a static feature snapshot.
+
+\paragraph{Factor qualification pipeline.}
+The analysis script tests all 104 engineered features through the following four-stage pipeline:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Full-sample Newey--West significance.} For each feature $x$ we regress the $k{=}1$ (10-event) mid-price return on a single-step lag of $x$ and compute the Newey-West HAC $t$-statistic $t_\text{NW}$ with lag truncation set to $\lfloor 4(T/100)^{2/9}\rfloor$. Features with $|t_\text{NW}|{<}1.96$ are excluded immediately (Figure~\ref{fig:fi-nw}).
+
+    \item \textbf{Rolling-window stability.} For each feature that passes step~1 we compute the same Newey-West regression over rolling 500-sample sub-windows and record the fraction of windows where the feature is still significant at the $5\%$ level (\emph{sig ratio}). Features with sig ratio ${<}0.25$ are excluded as regime-specific artifacts (Figure~\ref{fig:fi-rolling}).
+
+    \item \textbf{Monotonicity and rank information coefficient.} We verify that sorted-quintile returns are monotone in the factor direction (Figure~\ref{fig:fi-mono-ic}). Rank IC is computed as the Spearman correlation between factor quantile and mean return across quintile bins. Factors with sign inconsistency or negative rank IC are excluded.
+
+    \item \textbf{Benjamini--Hochberg FDR control.} Among features surviving steps~1--3, we apply BH correction at a $10\%$ FDR level on the Newey-West $p$-values. This produces the final set of 21 qualified features.
+\end{enumerate}
+
+Out of 104 tested, 21 survive all four stages. 20 of those belong to the \texttt{u6} (Price \& Volume Derivatives) group; only 1 from \texttt{u3} (Price Differences) qualifies. The top-five by $|t_\text{NW}|$ are all \texttt{u6}: Feature~1 ($t_\text{NW}{=}11.29$), Feature~3 ($10.84$), Feature~2 ($8.02$), Feature~7 ($7.24$), Feature~10 ($7.17$). Rolling stability for the top features is very high: Feature~1 and Feature~3 both show sig ratio $0.892$ (significant in 89\% of rolling windows), with mean $|t_\text{NW}|{>}9$ across windows, confirming that the predictive content is not regime-specific.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{../results/fi_paper/feature_nw_ttest.png}
-    \caption{Newey--West feature significance (paper results dir)}
+    \caption{Step 1: Full-sample Newey--West $t$-statistics for all 104 features. Horizontal dashed lines at $\pm 1.96$. The \texttt{u6} cluster (right) shows the strongest signals.}
+    \label{fig:fi-nw}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/rolling_ttest.png}
+    \caption{Step 2: Rolling-window significance ratio for qualified features. Each bar shows the fraction of 500-sample windows where the feature is significant. Top \texttt{u6} features maintain sig ratio ${\geq}0.89$.}
+    \label{fig:fi-rolling}
 \end{subfigure}
-\hfill
-\begin{subfigure}[b]{0.49\textwidth}
-    \centering
+\caption{Factor qualification: steps 1 and 2. Most features outside \texttt{u6} fail the full-sample NW test outright; those that pass are further screened for rolling stability.}
+\label{fig:fi-factor-steps12}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/qualified_monotonicity.png}
+    \caption{Step 3a: Sorted-quintile mean return for qualified factors. Monotone profiles (consistently increasing or decreasing across quintiles) confirm directional predictive content.}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/factor_rank_ic.png}
+    \caption{Step 3b: Rank information coefficient (Spearman correlation of quintile rank with mean return) for qualified factors. Positive rank IC confirms alignment between factor value and return direction.}
+\end{subfigure}
+\caption{Factor qualification: step 3 (monotonicity and rank IC). The 21 surviving factors all show consistent monotone quintile profiles and positive rank IC, providing interpretable microstructure signals that align with the return direction the network must predict.}
+\label{fig:fi-mono-ic}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{../results/fi_paper/baseline_comparison.png}
-    \caption{Baseline model comparison (paper profile DeepLOB)}
+    \caption{Baseline model comparison at the 10-event horizon. Ridge LR and MLP are trained on the 104-feature manual-factor set; DeepLOB (rightmost bar) is the paper-profile result.}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/fi_paper/trading_profit_ttest.png}
+    \caption{Strategy-style t-test of model-based trading signals at each horizon. No horizon passes the one-sample $t$-test ($p{<}0.05$), confirming that benchmark classification gain does not imply profitable round-trip trading.}
 \end{subfigure}
-\caption{FI-2010 factor significance and baseline comparison. The rightmost bar in (b) is DeepLOB at k=1 under the paper profile (acc~$0.835$, MCC~$0.608$), showing a substantial improvement over shallow baselines.}
-\label{fig:fi-factors}
+\caption{Baselines and strategy evaluation. The large MCC gap between DeepLOB and the shallow baselines (left) demonstrates that the deep architecture extracts information the static factor set misses. The insignificant trading diagnostics (right) provide an honest check: improved classification does not automatically translate to profitable signals after action mapping.}
+\label{fig:fi-baseline-strategy}
 \end{figure}
 
 \subsection{Optiver Transfer Results (\texttt{rolling3} Label Mode)}
