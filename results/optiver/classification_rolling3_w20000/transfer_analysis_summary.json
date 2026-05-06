@@ -1,0 +1,234 @@
+{
+  "task_type": "classification",
+  "figures": {
+    "figure6": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification_rolling3_w20000/figure6_transfer_accuracy.png",
+    "figure7": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification_rolling3_w20000/figure7_transfer_profit_tstats.png",
+    "figure8": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification_rolling3_w20000/figure8_transfer_cum_profit.png",
+    "transfer_loss_k5": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification_rolling3_w20000/transfer_loss_selected_k5.png",
+    "figure9": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification_rolling3_w20000/figure9_transfer_lime.png"
+  },
+  "lime_case": {
+    "task_type": "classification",
+    "stock_id": 82,
+    "horizon_k": 5,
+    "sample_index": 731,
+    "true_class": "Stationary"
+  },
+  "per_stock_horizon": [
+    {
+      "stock_id": 42,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.03476944529047485,
+      "profit_after_mean": 0.049138358263672785,
+      "profit_delta": 0.014368912973197936,
+      "requested_transfer_mode": "lstm_conv3",
+      "selected_transfer_mode": "lstm_conv3",
+      "accuracy_before": 0.41962962962962963,
+      "accuracy_after": 0.40444444444444444,
+      "accuracy_delta": -0.01518518518518519,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Down",
+      "base_dominant_share": 0.4588888888888889,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Up",
+      "transfer_dominant_share": 0.38555555555555554
+    },
+    {
+      "stock_id": 17,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.07882738619730886,
+      "profit_after_mean": 0.05705171279068709,
+      "profit_delta": -0.021775673406621773,
+      "requested_transfer_mode": "lstm_conv3",
+      "selected_transfer_mode": "lstm_conv3",
+      "accuracy_before": 0.4337037037037037,
+      "accuracy_after": 0.4033333333333333,
+      "accuracy_delta": -0.03037037037037038,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Down",
+      "base_dominant_share": 0.5159259259259259,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Up",
+      "transfer_dominant_share": 0.38592592592592595
+    },
+    {
+      "stock_id": 82,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.08901877218404931,
+      "profit_after_mean": 0.09599612534900817,
+      "profit_delta": 0.006977353164958858,
+      "requested_transfer_mode": "lstm_conv3",
+      "selected_transfer_mode": "lstm_conv3",
+      "accuracy_before": 0.4311111111111111,
+      "accuracy_after": 0.42518518518518517,
+      "accuracy_delta": -0.005925925925925946,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Down",
+      "base_dominant_share": 0.43666666666666665,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Up",
+      "transfer_dominant_share": 0.4325925925925926
+    }
+  ],
+  "strategy_diagnostics": [
+    {
+      "stock_id": 42,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "lstm_conv3",
+      "selected_transfer_mode": "lstm_conv3",
+      "candidate_modes": [
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.38162103295326233,
+          "best_epoch": 22,
+          "best_val_loss": 0.5327585935592651,
+          "best_val_macro_f1": 0.38162103295326233,
+          "best_val_kappa": 0.06424427777528763,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.40444444444444444,
+            "kappa": 0.07518115189536101,
+            "mcc": 0.07536762233573073,
+            "f1": [
+              0.4337349397590361,
+              0.2826666666666667,
+              0.43930089749645723
+            ],
+            "f1_w": 0.407809617225704
+          },
+          "prediction_summary": {
+            "class_counts": [
+              1037,
+              622,
+              1041
+            ],
+            "class_shares": [
+              0.38407407407407407,
+              0.23037037037037036,
+              0.38555555555555554
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.38555555555555554,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9768584150041679
+          }
+        }
+      ]
+    },
+    {
+      "stock_id": 17,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "lstm_conv3",
+      "selected_transfer_mode": "lstm_conv3",
+      "candidate_modes": [
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.34895771741867065,
+          "best_epoch": 19,
+          "best_val_loss": 0.5591650605201721,
+          "best_val_macro_f1": 0.34895771741867065,
+          "best_val_kappa": 0.02385125309228897,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.4033333333333333,
+            "kappa": 0.08413543686489111,
+            "mcc": 0.08487416015236278,
+            "f1": [
+              0.41941941941941946,
+              0.30188679245283023,
+              0.4452588181401741
+            ],
+            "f1_w": 0.408834840241229
+          },
+          "prediction_summary": {
+            "class_counts": [
+              933,
+              725,
+              1042
+            ],
+            "class_shares": [
+              0.34555555555555556,
+              0.26851851851851855,
+              0.38592592592592595
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.38592592592592595,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9900576434136449
+          }
+        }
+      ]
+    },
+    {
+      "stock_id": 82,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "lstm_conv3",
+      "selected_transfer_mode": "lstm_conv3",
+      "candidate_modes": [
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.3885195851325989,
+          "best_epoch": 6,
+          "best_val_loss": 0.5378450751304626,
+          "best_val_macro_f1": 0.3885195851325989,
+          "best_val_kappa": 0.07809381186962128,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.42518518518518517,
+            "kappa": 0.09382022763484998,
+            "mcc": 0.09394707336816564,
+            "f1": [
+              0.45623836126629425,
+              0.26693227091633465,
+              0.46619217081850534
+            ],
+            "f1_w": 0.42418161455389003
+          },
+          "prediction_summary": {
+            "class_counts": [
+              1042,
+              490,
+              1168
+            ],
+            "class_shares": [
+              0.38592592592592595,
+              0.1814814814814815,
+              0.4325925925925926
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.4325925925925926,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9463350120418592
+          }
+        }
+      ]
+    }
+  ],
+  "representative_transfer_losses": [
+    {
+      "horizon_k": 5,
+      "stock_id": 82,
+      "task_type": "classification",
+      "selected_transfer_mode": "lstm_conv3",
+      "path": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification_rolling3_w20000/transfer_loss_selected_k5.png",
+      "accuracy_before": 0.4311111111111111,
+      "accuracy_after": 0.42518518518518517,
+      "accuracy_delta": -0.005925925925925946
+    }
+  ]
+}

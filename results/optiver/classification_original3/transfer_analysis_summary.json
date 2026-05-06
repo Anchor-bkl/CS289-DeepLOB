@@ -1,0 +1,758 @@
+{
+  "task_type": "classification",
+  "figures": {
+    "figure6": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification/figure6_transfer_accuracy.png",
+    "figure7": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification/figure7_transfer_profit_tstats.png",
+    "figure8": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification/figure8_transfer_cum_profit.png",
+    "transfer_loss_k5": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification/transfer_loss_selected_k5.png",
+    "figure9": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification/figure9_transfer_lime.png"
+  },
+  "lime_case": {
+    "task_type": "classification",
+    "stock_id": 5,
+    "horizon_k": 5,
+    "sample_index": 483,
+    "true_class": "Stationary"
+  },
+  "per_stock_horizon": [
+    {
+      "stock_id": 5,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.06335734879978061,
+      "profit_after_mean": 0.04010648890361307,
+      "profit_delta": -0.02325085989616754,
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "all",
+      "accuracy_before": 0.3908754623921085,
+      "accuracy_after": 0.3995067817509248,
+      "accuracy_delta": 0.00863131935881628,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Up",
+      "base_dominant_share": 0.3834771886559803,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Down",
+      "transfer_dominant_share": 0.3477188655980271
+    },
+    {
+      "stock_id": 17,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.0012430888629756717,
+      "profit_after_mean": -0.006031365777767945,
+      "profit_delta": -0.007274454640743617,
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "all",
+      "accuracy_before": 0.36991368680641185,
+      "accuracy_after": 0.3723797780517879,
+      "accuracy_delta": 0.0024660912453760564,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Up",
+      "base_dominant_share": 0.5265104808877928,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Up",
+      "transfer_dominant_share": 0.42293464858199753
+    },
+    {
+      "stock_id": 42,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.11812102707807569,
+      "profit_after_mean": 0.05315672314633275,
+      "profit_delta": -0.06496430393174293,
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "lstm_conv3",
+      "accuracy_before": 0.39827373612823674,
+      "accuracy_after": 0.3921085080147966,
+      "accuracy_delta": -0.006165228113440169,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Up",
+      "base_dominant_share": 0.44882860665844637,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Up",
+      "transfer_dominant_share": 0.3933415536374846
+    },
+    {
+      "stock_id": 108,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.004733136417866844,
+      "profit_after_mean": 0.0650994119718989,
+      "profit_delta": 0.06036627555403206,
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "lstm_conv3",
+      "accuracy_before": 0.6300863131935882,
+      "accuracy_after": 0.5524044389642416,
+      "accuracy_delta": -0.07768187422934658,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Stationary",
+      "base_dominant_share": 0.7977805178791615,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Stationary",
+      "transfer_dominant_share": 0.5240443896424167
+    },
+    {
+      "stock_id": 120,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "profit_before_mean": 0.05413648712399038,
+      "profit_after_mean": 0.047035106742324466,
+      "profit_delta": -0.007101380381665912,
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "lstm_conv3",
+      "accuracy_before": 0.39827373612823674,
+      "accuracy_after": 0.3933415536374846,
+      "accuracy_delta": -0.004932182490752168,
+      "base_single_class_collapse": false,
+      "base_dominant_label": "Up",
+      "base_dominant_share": 0.3810110974106042,
+      "transfer_single_class_collapse": false,
+      "transfer_dominant_label": "Up",
+      "transfer_dominant_share": 0.3711467324290999
+    }
+  ],
+  "strategy_diagnostics": [
+    {
+      "stock_id": 5,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "all",
+      "candidate_modes": [
+        {
+          "transfer_mode": "head",
+          "selection_score": 0.3489112854003906,
+          "best_epoch": 3,
+          "best_val_loss": 0.6057236790657043,
+          "best_val_macro_f1": 0.3489112854003906,
+          "best_val_kappa": 0.026709163561463356,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.38964241676942046,
+            "kappa": 0.08085255450386719,
+            "mcc": 0.08200599339812854,
+            "f1": [
+              0.4013377926421404,
+              0.3411214953271028,
+              0.412751677852349
+            ],
+            "f1_w": 0.3859774935400598
+          },
+          "prediction_summary": {
+            "class_counts": [
+              321,
+              169,
+              321
+            ],
+            "class_shares": [
+              0.3958076448828607,
+              0.20838471023427868,
+              0.3958076448828607
+            ],
+            "dominant_class": 0,
+            "dominant_label": "Down",
+            "dominant_share": 0.3958076448828607,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9653219527594262
+          }
+        },
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.36368051171302795,
+          "best_epoch": 13,
+          "best_val_loss": 0.607976496219635,
+          "best_val_macro_f1": 0.36368051171302795,
+          "best_val_kappa": 0.046014249324798584,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.39827373612823674,
+            "kappa": 0.0952426673982123,
+            "mcc": 0.09565654244177721,
+            "f1": [
+              0.3917525773195876,
+              0.3888888888888889,
+              0.41258741258741255
+            ],
+            "f1_w": 0.3979028663394408
+          },
+          "prediction_summary": {
+            "class_counts": [
+              305,
+              209,
+              297
+            ],
+            "class_shares": [
+              0.376078914919852,
+              0.25770653514180025,
+              0.36621454993834773
+            ],
+            "dominant_class": 0,
+            "dominant_label": "Down",
+            "dominant_share": 0.376078914919852,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.98769822350777
+          }
+        },
+        {
+          "transfer_mode": "all",
+          "selection_score": 0.3691045045852661,
+          "best_epoch": 16,
+          "best_val_loss": 0.6090527176856995,
+          "best_val_macro_f1": 0.3691045045852661,
+          "best_val_kappa": 0.05449065938591957,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3995067817509248,
+            "kappa": 0.09883954403161488,
+            "mcc": 0.0988451826422441,
+            "f1": [
+              0.3756708407871199,
+              0.4247104247104247,
+              0.39999999999999997
+            ],
+            "f1_w": 0.3995817791591026
+          },
+          "prediction_summary": {
+            "class_counts": [
+              282,
+              259,
+              270
+            ],
+            "class_shares": [
+              0.3477188655980271,
+              0.3193588162762022,
+              0.33292231812577067
+            ],
+            "dominant_class": 0,
+            "dominant_label": "Down",
+            "dominant_share": 0.3477188655980271,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9994507529674354
+          }
+        }
+      ]
+    },
+    {
+      "stock_id": 17,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "all",
+      "candidate_modes": [
+        {
+          "transfer_mode": "head",
+          "selection_score": 0.3861396610736847,
+          "best_epoch": 1,
+          "best_val_loss": 0.6002331376075745,
+          "best_val_macro_f1": 0.3861396610736847,
+          "best_val_kappa": 0.085860475897789,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.38224414303329224,
+            "kappa": 0.06439884129520734,
+            "mcc": 0.0650105182470965,
+            "f1": [
+              0.395017793594306,
+              0.3238095238095238,
+              0.409375
+            ],
+            "f1_w": 0.37925385264070477
+          },
+          "prediction_summary": {
+            "class_counts": [
+              273,
+              183,
+              355
+            ],
+            "class_shares": [
+              0.3366214549938348,
+              0.22564734895191121,
+              0.43773119605425403
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.43773119605425403,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9685706454408133
+          }
+        },
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.38537752628326416,
+          "best_epoch": 8,
+          "best_val_loss": 0.6034898161888123,
+          "best_val_macro_f1": 0.38537752628326416,
+          "best_val_kappa": 0.08491231501102448,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.37361282367447596,
+            "kappa": 0.05449655064787229,
+            "mcc": 0.05480638400002814,
+            "f1": [
+              0.3882783882783883,
+              0.32962138084632514,
+              0.3923444976076555
+            ],
+            "f1_w": 0.37256584869446985
+          },
+          "prediction_summary": {
+            "class_counts": [
+              257,
+              212,
+              342
+            ],
+            "class_shares": [
+              0.31689272503082616,
+              0.26140567200986436,
+              0.4217016029593095
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.4217016029593095,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9821619034361674
+          }
+        },
+        {
+          "transfer_mode": "all",
+          "selection_score": 0.39237967133522034,
+          "best_epoch": 6,
+          "best_val_loss": 0.6044624447822571,
+          "best_val_macro_f1": 0.39237967133522034,
+          "best_val_kappa": 0.09259180724620819,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3723797780517879,
+            "kappa": 0.05173871295271071,
+            "mcc": 0.0520444961091114,
+            "f1": [
+              0.3833634719710669,
+              0.326530612244898,
+              0.39490445859872614
+            ],
+            "f1_w": 0.37081081282653033
+          },
+          "prediction_summary": {
+            "class_counts": [
+              264,
+              204,
+              343
+            ],
+            "class_shares": [
+              0.32552404438964244,
+              0.25154130702836003,
+              0.42293464858199753
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.42293464858199753,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9798335886809287
+          }
+        }
+      ]
+    },
+    {
+      "stock_id": 42,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "lstm_conv3",
+      "candidate_modes": [
+        {
+          "transfer_mode": "head",
+          "selection_score": 0.3959178924560547,
+          "best_epoch": 5,
+          "best_val_loss": 0.5791468620300293,
+          "best_val_macro_f1": 0.3959178924560547,
+          "best_val_kappa": 0.08808141201734543,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3995067817509248,
+            "kappa": 0.09516882093388734,
+            "mcc": 0.09574365077582142,
+            "f1": [
+              0.379182156133829,
+              0.33839479392624733,
+              0.4622792937399679
+            ],
+            "f1_w": 0.39561152312546255
+          },
+          "prediction_summary": {
+            "class_counts": [
+              269,
+              205,
+              337
+            ],
+            "class_shares": [
+              0.3316892725030826,
+              0.2527743526510481,
+              0.4155363748458693
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.4155363748458693,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9817710525024694
+          }
+        },
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.4059118330478668,
+          "best_epoch": 20,
+          "best_val_loss": 0.5774145126342773,
+          "best_val_macro_f1": 0.4059118330478668,
+          "best_val_kappa": 0.10670151561498642,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3921085080147966,
+            "kappa": 0.08569671025250503,
+            "mcc": 0.0858600245535597,
+            "f1": [
+              0.36293436293436293,
+              0.37675350701402804,
+              0.42975206611570255
+            ],
+            "f1_w": 0.39085984258202927
+          },
+          "prediction_summary": {
+            "class_counts": [
+              249,
+              243,
+              319
+            ],
+            "class_shares": [
+              0.3070283600493218,
+              0.2996300863131936,
+              0.3933415536374846
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.3933415536374846,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9927777534771127
+          }
+        },
+        {
+          "transfer_mode": "all",
+          "selection_score": 0.39894530177116394,
+          "best_epoch": 5,
+          "best_val_loss": 0.5784206986427307,
+          "best_val_macro_f1": 0.39894530177116394,
+          "best_val_kappa": 0.09182770550251007,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3871763255240444,
+            "kappa": 0.07740498622059877,
+            "mcc": 0.07777452829057019,
+            "f1": [
+              0.3399209486166008,
+              0.36178861788617883,
+              0.4455128205128205
+            ],
+            "f1_w": 0.384060774381497
+          },
+          "prediction_summary": {
+            "class_counts": [
+              237,
+              236,
+              338
+            ],
+            "class_shares": [
+              0.2922318125770654,
+              0.2909987669543773,
+              0.41676942046855736
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.41676942046855736,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.986236143211011
+          }
+        }
+      ]
+    },
+    {
+      "stock_id": 108,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "lstm_conv3",
+      "candidate_modes": [
+        {
+          "transfer_mode": "head",
+          "selection_score": 0.5067704319953918,
+          "best_epoch": 10,
+          "best_val_loss": 0.40689411759376526,
+          "best_val_macro_f1": 0.5067704319953918,
+          "best_val_kappa": 0.285165399312973,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.5561035758323057,
+            "kappa": 0.25534845285097785,
+            "mcc": 0.25744194055977965,
+            "f1": [
+              0.359375,
+              0.7023411371237458,
+              0.3929618768328446
+            ],
+            "f1_w": 0.56830972422409
+          },
+          "prediction_summary": {
+            "class_counts": [
+              215,
+              419,
+              177
+            ],
+            "class_shares": [
+              0.2651048088779285,
+              0.5166461159062885,
+              0.218249075215783
+            ],
+            "dominant_class": 1,
+            "dominant_label": "Stationary",
+            "dominant_share": 0.5166461159062885,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9333170994520804
+          }
+        },
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.5182142853736877,
+          "best_epoch": 23,
+          "best_val_loss": 0.3979664444923401,
+          "best_val_macro_f1": 0.5182142853736877,
+          "best_val_kappa": 0.3085349500179291,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.5524044389642416,
+            "kappa": 0.24542089803199862,
+            "mcc": 0.24745592052849366,
+            "f1": [
+              0.36548223350253806,
+              0.7065337763012183,
+              0.3507692307692307
+            ],
+            "f1_w": 0.5635213272257276
+          },
+          "prediction_summary": {
+            "class_counts": [
+              225,
+              425,
+              161
+            ],
+            "class_shares": [
+              0.27743526510480887,
+              0.5240443896424167,
+              0.19852034525277434
+            ],
+            "dominant_class": 1,
+            "dominant_label": "Stationary",
+            "dominant_share": 0.5240443896424167,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9241888973682776
+          }
+        },
+        {
+          "transfer_mode": "all",
+          "selection_score": 0.5039000511169434,
+          "best_epoch": 9,
+          "best_val_loss": 0.401885986328125,
+          "best_val_macro_f1": 0.5039000511169434,
+          "best_val_kappa": 0.2886429727077484,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.5795314426633785,
+            "kappa": 0.2661704611792176,
+            "mcc": 0.2662662657924139,
+            "f1": [
+              0.35428571428571426,
+              0.7209302325581395,
+              0.4110429447852761
+            ],
+            "f1_w": 0.5818618740096938
+          },
+          "prediction_summary": {
+            "class_counts": [
+              181,
+              468,
+              162
+            ],
+            "class_shares": [
+              0.22318125770653513,
+              0.5770653514180024,
+              0.1997533908754624
+            ],
+            "dominant_class": 1,
+            "dominant_label": "Stationary",
+            "dominant_share": 0.5770653514180024,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.8863257049854208
+          }
+        }
+      ]
+    },
+    {
+      "stock_id": 120,
+      "horizon_k": 5,
+      "task_type": "classification",
+      "requested_transfer_mode": "auto",
+      "selected_transfer_mode": "lstm_conv3",
+      "candidate_modes": [
+        {
+          "transfer_mode": "head",
+          "selection_score": 0.44023552536964417,
+          "best_epoch": 1,
+          "best_val_loss": 0.5556969046592712,
+          "best_val_macro_f1": 0.44023552536964417,
+          "best_val_kappa": 0.1607549786567688,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3958076448828607,
+            "kappa": 0.09315375469807918,
+            "mcc": 0.09326178527498477,
+            "f1": [
+              0.3570057581573897,
+              0.4091778202676864,
+              0.41868512110726647
+            ],
+            "f1_w": 0.39523709825569486
+          },
+          "prediction_summary": {
+            "class_counts": [
+              254,
+              255,
+              302
+            ],
+            "class_shares": [
+              0.31319358816276205,
+              0.31442663378545005,
+              0.3723797780517879
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.3723797780517879,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.996932301536408
+          }
+        },
+        {
+          "transfer_mode": "lstm_conv3",
+          "selection_score": 0.441988468170166,
+          "best_epoch": 5,
+          "best_val_loss": 0.5566946864128113,
+          "best_val_macro_f1": 0.441988468170166,
+          "best_val_kappa": 0.16296625137329102,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.3933415536374846,
+            "kappa": 0.08948766395574892,
+            "mcc": 0.08959840436043819,
+            "f1": [
+              0.3584905660377358,
+              0.4116504854368932,
+              0.4090121317157712
+            ],
+            "f1_w": 0.39325112155698605
+          },
+          "prediction_summary": {
+            "class_counts": [
+              263,
+              247,
+              301
+            ],
+            "class_shares": [
+              0.3242909987669544,
+              0.30456226880394577,
+              0.3711467324290999
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.3711467324290999,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.9968407700639528
+          }
+        },
+        {
+          "transfer_mode": "all",
+          "selection_score": 0.43915650248527527,
+          "best_epoch": 10,
+          "best_val_loss": 0.5568133592605591,
+          "best_val_macro_f1": 0.43915650248527527,
+          "best_val_kappa": 0.15709765255451202,
+          "best_val_reg_corr": -Infinity,
+          "test_metrics": {
+            "accuracy": 0.39457459926017263,
+            "kappa": 0.09142123084505371,
+            "mcc": 0.09147909502643073,
+            "f1": [
+              0.3409961685823754,
+              0.4272211720226843,
+              0.4133099824868652
+            ],
+            "f1_w": 0.3940996378297761
+          },
+          "prediction_summary": {
+            "class_counts": [
+              255,
+              261,
+              295
+            ],
+            "class_shares": [
+              0.31442663378545005,
+              0.3218249075215783,
+              0.3637484586929716
+            ],
+            "dominant_class": 2,
+            "dominant_label": "Up",
+            "dominant_share": 0.3637484586929716,
+            "unique_pred_classes": 3,
+            "single_class_collapse": false,
+            "near_single_class": false,
+            "normalized_entropy": 0.998093172651916
+          }
+        }
+      ]
+    }
+  ],
+  "representative_transfer_losses": [
+    {
+      "horizon_k": 5,
+      "stock_id": 5,
+      "task_type": "classification",
+      "selected_transfer_mode": "all",
+      "path": "/ocean/projects/mth250011p/xxiao7/DeepLOB/results/optiver/classification/transfer_loss_selected_k5.png",
+      "accuracy_before": 0.3908754623921085,
+      "accuracy_after": 0.3995067817509248,
+      "accuracy_delta": 0.00863131935881628
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Horizon,Profile,Accuracy,Cohen κ,MCC,F1-Down,F1-Stat,F1-Up,F1-Weighted,Best Epoch,Best Val Loss,Monitor
+k=1 (10 ev),adaptive,0.7409,0.4125,0.4137,0.2687,0.8901,0.4349,0.7315,49,0.8471,val_macro_f1
+k=2 (20 ev),adaptive,0.6603,0.3437,0.3462,0.2723,0.8311,0.4113,0.6445,37,0.9148,val_macro_f1
+k=3 (30 ev),adaptive,0.7709,0.5988,0.6013,0.6739,0.8440,0.6595,0.7663,21,0.7473,val_mcc
+k=4 (50 ev),adaptive,0.7940,0.6748,0.6751,0.7466,0.8500,0.7368,0.7930,16,0.7148,val_loss
+k=5 (100 ev),adaptive,0.7944,0.6920,0.6943,0.7836,0.8283,0.7717,0.7953,11,0.7041,val_loss
