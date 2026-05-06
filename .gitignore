@@ -13,7 +13,6 @@ data/
 
 # Generated artifacts
 logs/
-models/
 results/
 
 # Python cache
